@@ -1,8 +1,9 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "./features/cart/cartSlice";
 
 function App() {
   const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart.items);
 
   return (
     <div>
@@ -15,6 +16,14 @@ function App() {
       >
         Add to Cart
       </button>
+
+      <h2>Cart Items:</h2>
+
+      {cartItems.map((item) => (
+        <div key={item.id}>
+          {item.title} - Qty: {item.quantity}
+        </div>
+      ))}
     </div>
   );
 }
