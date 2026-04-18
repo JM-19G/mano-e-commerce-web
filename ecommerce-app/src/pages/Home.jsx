@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../features/cart/cartSlice";
 import ProductCard from "../components/ProductCard";
 import products from "../data/products";
+import debounce from "lodash.debounce";
 
 function Home() {
   const dispatch = useDispatch();
@@ -19,6 +20,22 @@ function Home() {
     "Agrochemicals",
     "Processed Farm Products",
   ];
+
+  // 🔍 Debounced search handler
+  const handleSearch = useMemo(
+    () =>
+      debounce((value) => {
+        setSearch(value);
+      }, 300),
+    []
+  );
+
+  // 🧹 cleanup debounce to avoid memory leaks
+  useEffect(() => {
+    return () => {
+      handleSearch.cancel();
+    };
+  }, [handleSearch]);
 
   // 1. filter by category
   let filteredProducts =
@@ -37,12 +54,11 @@ function Home() {
 
       <h2>Cart Items: {cartItems.length}</h2>
 
-      {/* SEARCH INPUT */}
+      {/* SEARCH INPUT (DEBOUNCED) */}
       <input
         type="text"
         placeholder="Search products..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(e) => handleSearch(e.target.value)}
         style={{
           padding: 10,
           width: "100%",
@@ -52,7 +68,7 @@ function Home() {
         }}
       />
 
-      {/* CATEGORY BUTTONS */}
+      {/* CATEGORY FILTER */}
       <div style={{ marginBottom: 20 }}>
         {categories.map((cat) => (
           <button
