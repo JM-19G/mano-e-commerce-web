@@ -4,11 +4,12 @@ import { addToCart } from "../features/cart/cartSlice";
 import ProductCard from "../components/ProductCard";
 import products from "../data/products";
 
-function App() {
+function Home() {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
 
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [search, setSearch] = useState("");
 
   const categories = [
     "All",
@@ -19,16 +20,37 @@ function App() {
     "Processed Farm Products",
   ];
 
-  const filteredProducts =
+  // 1. filter by category
+  let filteredProducts =
     selectedCategory === "All"
       ? products
       : products.filter((p) => p.category === selectedCategory);
 
+  // 2. filter by search
+  filteredProducts = filteredProducts.filter((product) =>
+    product.title.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
-    <div style={{ padding: 20 }}>
+    <div>
       <h1>🌾 Agro Market</h1>
 
-      <h2>Cart: {cartItems.length}</h2>
+      <h2>Cart Items: {cartItems.length}</h2>
+
+      {/* SEARCH INPUT */}
+      <input
+        type="text"
+        placeholder="Search products..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        style={{
+          padding: 10,
+          width: "100%",
+          marginBottom: 20,
+          border: "1px solid #ccc",
+          borderRadius: 5,
+        }}
+      />
 
       {/* CATEGORY BUTTONS */}
       <div style={{ marginBottom: 20 }}>
@@ -38,8 +60,11 @@ function App() {
             onClick={() => setSelectedCategory(cat)}
             style={{
               marginRight: 10,
+              padding: "8px 12px",
               background: selectedCategory === cat ? "green" : "#ddd",
               color: selectedCategory === cat ? "white" : "black",
+              border: "none",
+              cursor: "pointer",
             }}
           >
             {cat}
@@ -47,14 +72,14 @@ function App() {
         ))}
       </div>
 
-      {/* PRODUCTS */}
+      {/* PRODUCTS GRID */}
       <div
         style={{
-         display: "grid",
-         gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-         gap: 15,
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+          gap: 15,
         }}
-       >
+      >
         {filteredProducts.map((product) => (
           <ProductCard
             key={product.id}
@@ -67,4 +92,4 @@ function App() {
   );
 }
 
-export default App;
+export default Home;
