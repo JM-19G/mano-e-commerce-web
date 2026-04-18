@@ -48,7 +48,13 @@ function App() {
       </div>
 
       {/* PRODUCTS */}
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
+      <div
+        style={{
+         display: "grid",
+         gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+         gap: 15,
+        }}
+       >
         {filteredProducts.map((product) => (
           <ProductCard
             key={product.id}
