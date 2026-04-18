@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "./features/cart/cartSlice";
-import ProductCard from "./components/ProductCard";
-import products from "./data/products";
+import { addToCart } from "../features/cart/cartSlice";
+import ProductCard from "../components/ProductCard";
+import products from "../data/products";
 
 function App() {
   const dispatch = useDispatch();
