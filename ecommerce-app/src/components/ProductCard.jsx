@@ -3,6 +3,19 @@ import { useNavigate } from "react-router-dom";
 function ProductCard({ product, onAdd }) {
   const navigate = useNavigate();
 
+  // ✅ Load reviews for this product
+  const savedReviews = localStorage.getItem(`reviews_${product.id}`);
+  const reviews = savedReviews ? JSON.parse(savedReviews) : [];
+
+  // ✅ Calculate average rating
+  const avg =
+    reviews.length > 0
+      ? (
+          reviews.reduce((acc, r) => acc + r.rating, 0) /
+          reviews.length
+        ).toFixed(1)
+      : null;
+
   return (
     <div
       style={{
@@ -13,7 +26,7 @@ function ProductCard({ product, onAdd }) {
         boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
       }}
     >
-      {/* IMAGE */}
+      {/* CLICKABLE AREA */}
       <div
         onClick={() => navigate(`/product/${product.id}`)}
         style={{ cursor: "pointer" }}
@@ -29,7 +42,7 @@ function ProductCard({ product, onAdd }) {
           }}
         />
 
-        {/* BADGE */}
+        {/* TAG */}
         {product.tag && (
           <span
             style={{
@@ -46,15 +59,21 @@ function ProductCard({ product, onAdd }) {
           </span>
         )}
 
-        {/* TITLE */}
-        <h3 style={{ margin: "10px 0 5px" }}>{product.title}</h3>
+        <h3 style={{ margin: "10px 0 5px" }}>
+          {product.title}
+        </h3>
 
-        {/* CATEGORY */}
         <p style={{ fontSize: 12, color: "#777" }}>
           {product.category}
         </p>
 
-        {/* PRICE */}
+        {/* ⭐ SHOW RATING */}
+        {avg && (
+          <p style={{ fontSize: 14, color: "#555" }}>
+            ⭐ {avg}
+          </p>
+        )}
+
         <p
           style={{
             fontWeight: "bold",
@@ -66,7 +85,6 @@ function ProductCard({ product, onAdd }) {
         </p>
       </div>
 
-      {/* BUTTON */}
       <button
         onClick={() => onAdd(product)}
         style={{

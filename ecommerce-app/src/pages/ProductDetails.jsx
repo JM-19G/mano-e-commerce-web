@@ -10,21 +10,42 @@ function ProductDetails() {
 
   const product = products.find((p) => p.id === Number(id));
 
-  const [reviews, setReviews] = useState(product?.reviews || []);
+  // ✅ Load reviews from localStorage
+  const [reviews, setReviews] = useState(() => {
+    const saved = localStorage.getItem(`reviews_${id}`);
+    return saved ? JSON.parse(saved) : product?.reviews || [];
+  });
+
   const [text, setText] = useState("");
   const [rating, setRating] = useState(5);
 
   if (!product) return <h2>Product not found</h2>;
 
+  // ✅ Calculate average rating
+  const averageRating =
+    reviews.length > 0
+      ? (
+          reviews.reduce((acc, r) => acc + r.rating, 0) /
+          reviews.length
+        ).toFixed(1)
+      : 0;
+
+  // ✅ Handle review submit
   const handleReview = () => {
     if (!text) return;
 
-    const newReview = {
-      text,
-      rating,
-    };
+    const newReview = { text, rating };
 
-    setReviews([...reviews, newReview]);
+    const updatedReviews = [...reviews, newReview];
+
+    setReviews(updatedReviews);
+
+    // ✅ Save to localStorage
+    localStorage.setItem(
+      `reviews_${id}`,
+      JSON.stringify(updatedReviews)
+    );
+
     setText("");
     setRating(5);
   };
@@ -38,6 +59,12 @@ function ProductDetails() {
       />
 
       <h1>{product.title}</h1>
+
+      {/* ⭐ Average Rating */}
+      <p>
+        ⭐ {averageRating} ({reviews.length} reviews)
+      </p>
+
       <h2>₦{product.price}</h2>
       <p>{product.category}</p>
 
@@ -73,14 +100,22 @@ function ProductDetails() {
 
         <br />
 
-        <button onClick={handleReview}>Submit Review</button>
+        <button onClick={handleReview}>
+          Submit Review
+        </button>
       </div>
 
       {/* SHOW REVIEWS */}
       {reviews.length === 0 && <p>No reviews yet</p>}
 
       {reviews.map((r, index) => (
-        <div key={index} style={{ borderBottom: "1px solid #ddd", padding: 10 }}>
+        <div
+          key={index}
+          style={{
+            borderBottom: "1px solid #ddd",
+            padding: 10,
+          }}
+        >
           <p>{r.text}</p>
           <p>{"⭐".repeat(r.rating)}</p>
         </div>
