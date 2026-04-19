@@ -10,7 +10,6 @@ function ProductDetails() {
 
   const product = products.find((p) => p.id === Number(id));
 
-  // ✅ Load reviews from localStorage
   const [reviews, setReviews] = useState(() => {
     const saved = localStorage.getItem(`reviews_${id}`);
     return saved ? JSON.parse(saved) : product?.reviews || [];
@@ -21,7 +20,6 @@ function ProductDetails() {
 
   if (!product) return <h2>Product not found</h2>;
 
-  // ✅ Calculate average rating
   const averageRating =
     reviews.length > 0
       ? (
@@ -30,21 +28,14 @@ function ProductDetails() {
         ).toFixed(1)
       : 0;
 
-  // ✅ Handle review submit
   const handleReview = () => {
     if (!text) return;
 
     const newReview = { text, rating };
-
     const updatedReviews = [...reviews, newReview];
 
     setReviews(updatedReviews);
-
-    // ✅ Save to localStorage
-    localStorage.setItem(
-      `reviews_${id}`,
-      JSON.stringify(updatedReviews)
-    );
+    localStorage.setItem(`reviews_${id}`, JSON.stringify(updatedReviews));
 
     setText("");
     setRating(5);
@@ -52,74 +43,147 @@ function ProductDetails() {
 
   return (
     <div style={{ padding: 20 }}>
-      <img
-        src={product.image}
-        alt={product.title}
-        style={{ width: 300, height: 300, objectFit: "cover" }}
-      />
+      
+      {/* 🔥 TOP SECTION (IMAGE + DETAILS) */}
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 20,
+          marginBottom: 30,
+        }}
+      >
+        {/* IMAGE */}
+        <div style={{ flex: 1, minWidth: 250 }}>
+          <img
+            src={product.image}
+            alt={product.title}
+            style={{
+              width: "100%",
+              maxHeight: 400,
+              objectFit: "cover",
+              borderRadius: 10,
+            }}
+          />
+        </div>
 
-      <h1>{product.title}</h1>
+        {/* DETAILS */}
+        <div style={{ flex: 1, minWidth: 250 }}>
+          <h1>{product.title}</h1>
 
-      {/* ⭐ Average Rating */}
-      <p>
-        ⭐ {averageRating} ({reviews.length} reviews)
-      </p>
+          <p style={{ fontSize: 14, color: "#777" }}>
+            {product.category}
+          </p>
 
-      <h2>₦{product.price}</h2>
-      <p>{product.category}</p>
+          <p style={{ fontSize: 18 }}>
+            ⭐ {averageRating} ({reviews.length} reviews)
+          </p>
 
-      <button onClick={() => dispatch(addToCart(product))}>
-        Add to Cart
-      </button>
+          <h2 style={{ color: "#2e7d32" }}>
+            ₦{product.price}
+          </h2>
 
-      <hr />
+          {product.tag && (
+            <span
+              style={{
+                display: "inline-block",
+                padding: "5px 10px",
+                background: "green",
+                color: "white",
+                borderRadius: 5,
+                marginBottom: 10,
+              }}
+            >
+              {product.tag}
+            </span>
+          )}
 
-      <h2>⭐ Reviews</h2>
+          <br />
 
-      {/* ADD REVIEW */}
-      <div style={{ marginBottom: 20 }}>
-        <textarea
-          placeholder="Write your review..."
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          style={{ width: "100%", padding: 10 }}
-        />
-
-        <br />
-
-        <select
-          value={rating}
-          onChange={(e) => setRating(Number(e.target.value))}
-        >
-          <option value={5}>5 ⭐</option>
-          <option value={4}>4 ⭐</option>
-          <option value={3}>3 ⭐</option>
-          <option value={2}>2 ⭐</option>
-          <option value={1}>1 ⭐</option>
-        </select>
-
-        <br />
-
-        <button onClick={handleReview}>
-          Submit Review
-        </button>
+          <button
+            onClick={() => dispatch(addToCart(product))}
+            style={{
+              marginTop: 10,
+              padding: 12,
+              width: "100%",
+              background: "#2e7d32",
+              color: "white",
+              border: "none",
+              borderRadius: 5,
+              fontSize: 16,
+              cursor: "pointer",
+            }}
+          >
+            Add to Cart
+          </button>
+        </div>
       </div>
 
-      {/* SHOW REVIEWS */}
-      {reviews.length === 0 && <p>No reviews yet</p>}
+      {/* 🔥 REVIEWS SECTION */}
+      <div>
+        <h2>⭐ Customer Reviews</h2>
 
-      {reviews.map((r, index) => (
-        <div
-          key={index}
-          style={{
-            borderBottom: "1px solid #ddd",
-            padding: 10,
-          }}
-        >
-          <p>{r.text}</p>
-          <p>{"⭐".repeat(r.rating)}</p>
+        {/* ADD REVIEW */}
+        <div style={{ marginBottom: 20 }}>
+          <textarea
+            placeholder="Write your review..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            style={{
+              width: "100%",
+              padding: 10,
+              borderRadius: 5,
+            }}
+          />
+
+          <br />
+
+          <select
+            value={rating}
+            onChange={(e) => setRating(Number(e.target.value))}
+            style={{ marginTop: 10 }}
+          >
+            <option value={5}>5 ⭐</option>
+            <option value={4}>4 ⭐</option>
+            <option value={3}>3 ⭐</option>
+            <option value={2}>2 ⭐</option>
+            <option value={1}>1 ⭐</option>
+          </select>
+
+          <br />
+
+          <button
+            onClick={handleReview}
+            style={{
+              marginTop: 10,
+              padding: 10,
+              background: "#2e7d32",
+              color: "white",
+              border: "none",
+              borderRadius: 5,
+              cursor: "pointer",
+            }}
+          >
+            Submit Review
+          </button>
         </div>
-      ))}
+
+        {/* DISPLAY REVIEWS */}
+        {reviews.length === 0 && <p>No reviews yet</p>}
+
+        {reviews.map((r, index) => (
+          <div
+            key={index}
+            style={{
+              borderBottom: "1px solid #ddd",
+              padding: 10,
+            }}
+          >
+            <p>{r.text}</p>
+            <p>{"⭐".repeat(r.rating)}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
