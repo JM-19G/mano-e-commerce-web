@@ -15,7 +15,7 @@ function Layout({ children }) {
 
         <div style={{ display: "flex", gap: 20 }}>
           <Link to="/" style={{ color: "white", textDecoration: "none" }}>Home</Link>
-          <Link to="/wishlist" style={{ color: "white", textDecoration: "none" }}>❤️ Wishlist</Link>
+          <Link to="/wishlist" style={{ color: "white", textDecoration: "none" }}>Wishlist</Link>
           <Link to="/cart" style={{ color: "white", textDecoration: "none" }}>Cart</Link>
           <Link to="/orders" style={{ color: "white", textDecoration: "none" }}>Orders</Link>
         </div>
