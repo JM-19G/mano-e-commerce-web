@@ -4,6 +4,7 @@ function ProductCard({ product, onAdd }) {
   if (!product) return <h2>Product not found</h2>;
 
   const naira = "\u20A6";
+  const bullet = "\u2022";
   const price =
     typeof product.price === "number"
       ? product.price
@@ -46,7 +47,7 @@ function ProductCard({ product, onAdd }) {
 
           <p style={{ margin: "0 0 10px", fontSize: 13, color: "#6b7280" }}>
             {product.category}
-            {product.location ? ` • ${product.location}` : ""}
+            {product.location ? ` ${bullet} ${product.location}` : ""}
           </p>
 
           <div

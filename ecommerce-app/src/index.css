@@ -54,6 +54,24 @@ body {
   margin: 0;
 }
 
+.cart-grid {
+  display: grid;
+  gap: 20px;
+}
+
+@media (min-width: 900px) {
+  .cart-grid {
+    grid-template-columns: 1fr 360px;
+    align-items: start;
+  }
+
+  .cart-summary {
+    position: sticky;
+    top: 86px;
+    align-self: start;
+  }
+}
+
 #root {
   width: 1126px;
   max-width: 100%;

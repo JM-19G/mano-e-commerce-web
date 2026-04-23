@@ -1,12 +1,18 @@
-import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 import products from "../data/products";
+import { useToast } from "../hooks/useToast.js";
 import { addToCart } from "../features/cart/cartSlice";
 
 function ProductDetails() {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const { toast } = useToast();
+
+  const naira = "\u20A6";
+  const star = "\u2B50";
+  const fire = "\uD83D\uDD25";
 
   const product = products.find((p) => p.id === Number(id));
 
@@ -23,15 +29,14 @@ function ProductDetails() {
   const averageRating =
     reviews.length > 0
       ? (
-          reviews.reduce((acc, r) => acc + r.rating, 0) /
-          reviews.length
+          reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length
         ).toFixed(1)
-      : 0;
+      : "0";
 
   const handleReview = () => {
-    if (!text) return;
+    if (!text.trim()) return;
 
-    const newReview = { text, rating };
+    const newReview = { text: text.trim(), rating };
     const updatedReviews = [...reviews, newReview];
 
     setReviews(updatedReviews);
@@ -39,12 +44,11 @@ function ProductDetails() {
 
     setText("");
     setRating(5);
+    toast("Review submitted", { type: "success" });
   };
 
   return (
-    <div style={{ padding: 20 }}>
-      
-      {/* 🔥 TOP SECTION (IMAGE + DETAILS) */}
+    <div style={{ padding: 20, textAlign: "left" }}>
       <div
         style={{
           display: "flex",
@@ -53,7 +57,6 @@ function ProductDetails() {
           marginBottom: 30,
         }}
       >
-        {/* IMAGE */}
         <div style={{ flex: 1, minWidth: 250 }}>
           <img
             src={product.image}
@@ -67,20 +70,18 @@ function ProductDetails() {
           />
         </div>
 
-        {/* DETAILS */}
         <div style={{ flex: 1, minWidth: 250 }}>
-          <h1>{product.title}</h1>
+          <h1 style={{ textAlign: "left" }}>{product.title}</h1>
 
-          <p style={{ fontSize: 14, color: "#777" }}>
-            {product.category}
+          <p style={{ fontSize: 14, color: "#777" }}>{product.category}</p>
+
+          <p style={{ fontSize: 18, margin: "8px 0" }}>
+            {star} {averageRating} ({reviews.length} reviews)
           </p>
 
-          <p style={{ fontSize: 18 }}>
-            ⭐ {averageRating} ({reviews.length} reviews)
-          </p>
-
-          <h2 style={{ color: "#2e7d32" }}>
-            ₦{product.price}
+          <h2 style={{ color: "#2e7d32", marginTop: 8 }}>
+            {naira}
+            {Number(product.price).toLocaleString()}
           </h2>
 
           {product.tag && (
@@ -98,10 +99,11 @@ function ProductDetails() {
             </span>
           )}
 
-          <br />
-
           <button
-            onClick={() => dispatch(addToCart(product))}
+            onClick={() => {
+              dispatch(addToCart(product));
+              toast(`Added ${product.title} to cart`, { type: "success" });
+            }}
             style={{
               marginTop: 10,
               padding: 12,
@@ -119,11 +121,11 @@ function ProductDetails() {
         </div>
       </div>
 
-      {/* 🔥 REVIEWS SECTION */}
       <div>
-        <h2>⭐ Customer Reviews</h2>
+        <h2>
+          {fire} {star} Customer Reviews
+        </h2>
 
-        {/* ADD REVIEW */}
         <div style={{ marginBottom: 20 }}>
           <textarea
             placeholder="Write your review..."
@@ -136,39 +138,34 @@ function ProductDetails() {
             }}
           />
 
-          <br />
+          <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 10 }}>
+            <select
+              value={rating}
+              onChange={(e) => setRating(Number(e.target.value))}
+            >
+              {[5, 4, 3, 2, 1].map((n) => (
+                <option key={n} value={n}>
+                  {n} {star}
+                </option>
+              ))}
+            </select>
 
-          <select
-            value={rating}
-            onChange={(e) => setRating(Number(e.target.value))}
-            style={{ marginTop: 10 }}
-          >
-            <option value={5}>5 ⭐</option>
-            <option value={4}>4 ⭐</option>
-            <option value={3}>3 ⭐</option>
-            <option value={2}>2 ⭐</option>
-            <option value={1}>1 ⭐</option>
-          </select>
-
-          <br />
-
-          <button
-            onClick={handleReview}
-            style={{
-              marginTop: 10,
-              padding: 10,
-              background: "#2e7d32",
-              color: "white",
-              border: "none",
-              borderRadius: 5,
-              cursor: "pointer",
-            }}
-          >
-            Submit Review
-          </button>
+            <button
+              onClick={handleReview}
+              style={{
+                padding: "10px 14px",
+                background: "#2e7d32",
+                color: "white",
+                border: "none",
+                borderRadius: 5,
+                cursor: "pointer",
+              }}
+            >
+              Submit Review
+            </button>
+          </div>
         </div>
 
-        {/* DISPLAY REVIEWS */}
         {reviews.length === 0 && <p>No reviews yet</p>}
 
         {reviews.map((r, index) => (
@@ -179,8 +176,8 @@ function ProductDetails() {
               padding: 10,
             }}
           >
-            <p>{r.text}</p>
-            <p>{"⭐".repeat(r.rating)}</p>
+            <p style={{ margin: "0 0 6px" }}>{r.text}</p>
+            <p style={{ margin: 0 }}>{star.repeat(r.rating)}</p>
           </div>
         ))}
       </div>

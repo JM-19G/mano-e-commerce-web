@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   applyCoupon,
@@ -7,6 +7,7 @@ import {
   removeFromCart,
   updateQuantity,
 } from "../features/cart/cartSlice";
+import { useToast } from "../hooks/useToast.js";
 
 function Cart() {
   const dispatch = useDispatch();
@@ -14,12 +15,38 @@ function Cart() {
   const orders = useSelector((state) => state.cart.orders);
   const coupon = useSelector((state) => state.cart.coupon);
   const couponError = useSelector((state) => state.cart.couponError);
+  const { toast } = useToast();
 
   const naira = "\u20A6";
   const cartIcon = "\uD83D\uDED2";
   const ordersIcon = "\uD83D\uDCE6";
 
   const [couponInput, setCouponInput] = useState("");
+
+  const lastCouponCodeRef = useRef(null);
+  const lastCouponErrorRef = useRef(null);
+  const lastOrdersLenRef = useRef(orders.length);
+
+  useEffect(() => {
+    if (coupon?.code && coupon.code !== lastCouponCodeRef.current) {
+      toast(`Coupon ${coupon.code} applied`, { type: "success" });
+      lastCouponCodeRef.current = coupon.code;
+    }
+  }, [coupon, toast]);
+
+  useEffect(() => {
+    if (couponError && couponError !== lastCouponErrorRef.current) {
+      toast(couponError, { type: "error" });
+      lastCouponErrorRef.current = couponError;
+    }
+  }, [couponError, toast]);
+
+  useEffect(() => {
+    if (orders.length > lastOrdersLenRef.current) {
+      toast("Order placed successfully", { type: "success" });
+    }
+    lastOrdersLenRef.current = orders.length;
+  }, [orders.length, toast]);
 
   const { subtotal, discount, total } = useMemo(() => {
     const subtotalValue = items.reduce(
@@ -47,125 +74,160 @@ function Cart() {
     };
   }, [items, coupon]);
 
+  const handleApplyCoupon = () => {
+    if (!couponInput.trim()) {
+      toast("Enter a coupon code", { type: "error" });
+      return;
+    }
+    dispatch(applyCoupon(couponInput));
+  };
+
+  const handleClearCoupon = () => {
+    dispatch(clearCoupon());
+    setCouponInput("");
+    toast("Coupon cleared", { type: "info" });
+  };
+
+  const handleCheckout = () => {
+    if (items.length === 0) {
+      toast("Your cart is empty", { type: "error" });
+      return;
+    }
+    dispatch(checkout());
+  };
+
   return (
     <div style={{ padding: 20 }}>
       <h1>
         {cartIcon} Cart
       </h1>
 
-      {items.length === 0 && <p>Cart is empty</p>}
+      <div className="cart-grid">
+        <div>
+          {items.length === 0 && <p>Cart is empty</p>}
 
-      {items.map((item) => (
-        <div
-          key={item.id}
-          style={{
-            border: "1px solid #eee",
-            borderRadius: 8,
-            padding: 12,
-            marginBottom: 12,
-          }}
-        >
-          <h3 style={{ margin: "0 0 6px" }}>{item.title}</h3>
-          <p style={{ margin: "0 0 10px" }}>
-            {naira}
-            {Number(item.price).toLocaleString()}
-          </p>
-
-          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-            <input
-              type="number"
-              value={item.quantity}
-              min="1"
-              onChange={(e) =>
-                dispatch(
-                  updateQuantity({
-                    id: item.id,
-                    quantity: Number(e.target.value),
-                  })
-                )
-              }
-              style={{ width: 90, padding: 8 }}
-            />
-
-            <button onClick={() => dispatch(removeFromCart(item.id))}>
-              Remove
-            </button>
-          </div>
-        </div>
-      ))}
-
-      <div
-        style={{
-          marginTop: 20,
-          padding: 15,
-          border: "1px solid #ddd",
-          borderRadius: 8,
-        }}
-      >
-        <h2 style={{ marginTop: 0 }}>Summary</h2>
-        <p style={{ margin: "6px 0" }}>
-          Subtotal: {naira}
-          {subtotal.toLocaleString()}
-        </p>
-        <p style={{ margin: "6px 0" }}>
-          Discount: -{naira}
-          {discount.toLocaleString()}
-        </p>
-        <h2 style={{ margin: "10px 0 0" }}>
-          Total: {naira}
-          {total.toLocaleString()}
-        </h2>
-
-        <div style={{ marginTop: 15 }}>
-          <label style={{ display: "block", marginBottom: 6 }}>
-            Coupon code (try <strong>MANO10</strong> or{" "}
-            <strong>WELCOME5</strong>)
-          </label>
-
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <input
-              value={couponInput}
-              onChange={(e) => setCouponInput(e.target.value)}
-              placeholder="Enter coupon"
+          {items.map((item) => (
+            <div
+              key={item.id}
               style={{
-                padding: 10,
-                borderRadius: 6,
-                border: "1px solid #ccc",
-                flex: "1",
-                minWidth: 220,
-              }}
-            />
-            <button onClick={() => dispatch(applyCoupon(couponInput))}>
-              Apply
-            </button>
-            <button
-              onClick={() => {
-                dispatch(clearCoupon());
-                setCouponInput("");
+                border: "1px solid #eee",
+                borderRadius: 8,
+                padding: 12,
+                marginBottom: 12,
+                textAlign: "left",
               }}
             >
-              Clear
-            </button>
+              <h3 style={{ margin: "0 0 6px" }}>{item.title}</h3>
+              <p style={{ margin: "0 0 10px" }}>
+                {naira}
+                {Number(item.price).toLocaleString()}
+              </p>
+
+              <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                <input
+                  type="number"
+                  value={item.quantity}
+                  min="1"
+                  onChange={(e) =>
+                    dispatch(
+                      updateQuantity({
+                        id: item.id,
+                        quantity: Number(e.target.value),
+                      })
+                    )
+                  }
+                  style={{ width: 90, padding: 8 }}
+                />
+
+                <button
+                  onClick={() => {
+                    dispatch(removeFromCart(item.id));
+                    toast("Removed from cart", { type: "info" });
+                  }}
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div
+          className="cart-summary"
+          style={{
+            padding: 15,
+            border: "1px solid #ddd",
+            borderRadius: 8,
+            textAlign: "left",
+          }}
+        >
+          <h2 style={{ marginTop: 0 }}>Summary</h2>
+          <p style={{ margin: "6px 0" }}>
+            Subtotal: {naira}
+            {subtotal.toLocaleString()}
+          </p>
+          <p style={{ margin: "6px 0" }}>
+            Discount: -{naira}
+            {discount.toLocaleString()}
+          </p>
+          <h2 style={{ margin: "10px 0 0" }}>
+            Total: {naira}
+            {total.toLocaleString()}
+          </h2>
+
+          <div style={{ marginTop: 15 }}>
+            <label style={{ display: "block", marginBottom: 6 }}>
+              Coupon code (try <strong>MANO10</strong> or{" "}
+              <strong>WELCOME5</strong>)
+            </label>
+
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              <input
+                value={couponInput}
+                onChange={(e) => setCouponInput(e.target.value)}
+                placeholder="Enter coupon"
+                style={{
+                  padding: 10,
+                  borderRadius: 6,
+                  border: "1px solid #ccc",
+                  flex: "1",
+                  minWidth: 220,
+                }}
+              />
+              <button onClick={handleApplyCoupon}>Apply</button>
+              <button onClick={handleClearCoupon}>Clear</button>
+            </div>
+
+            {coupon && (
+              <p style={{ marginTop: 10, color: "#2e7d32" }}>
+                Applied: <strong>{coupon.code}</strong> ({coupon.label})
+              </p>
+            )}
+
+            {couponError && (
+              <p style={{ marginTop: 10, color: "crimson" }}>{couponError}</p>
+            )}
           </div>
 
-          {coupon && (
-            <p style={{ marginTop: 10, color: "#2e7d32" }}>
-              Applied: <strong>{coupon.code}</strong> ({coupon.label})
-            </p>
-          )}
-
-          {couponError && (
-            <p style={{ marginTop: 10, color: "crimson" }}>{couponError}</p>
-          )}
+          <button
+            onClick={handleCheckout}
+            disabled={items.length === 0}
+            style={{
+              marginTop: 15,
+              padding: "10px 14px",
+              width: "100%",
+              borderRadius: 8,
+              border: "none",
+              cursor: items.length === 0 ? "not-allowed" : "pointer",
+              background: items.length === 0 ? "#d1d5db" : "#2e7d32",
+              color: items.length === 0 ? "#374151" : "white",
+              fontWeight: 700,
+            }}
+          >
+            Checkout
+          </button>
         </div>
       </div>
-
-      <button
-        onClick={() => dispatch(checkout())}
-        style={{ marginTop: 15, padding: "10px 14px" }}
-      >
-        Checkout
-      </button>
 
       <hr />
 
