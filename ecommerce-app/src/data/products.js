@@ -214,7 +214,7 @@ const products = [
     price: 145000,
     category: "Farm Equipment",
     tags: ["Modern"],
-    image: "https://picsum.photos/id/180/300/300",
+    image: "https://i.pinimg.com/1200x/ff/f9/75/fff975f0bb215ce3d3d696ba3e5ba15b.jpg",
     type: "regular",
     stock: 8,
     location: "Lagos"
