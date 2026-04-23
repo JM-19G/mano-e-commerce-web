@@ -15,6 +15,10 @@ function Cart() {
   const coupon = useSelector((state) => state.cart.coupon);
   const couponError = useSelector((state) => state.cart.couponError);
 
+  const naira = "\u20A6";
+  const cartIcon = "\uD83D\uDED2";
+  const ordersIcon = "\uD83D\uDCE6";
+
   const [couponInput, setCouponInput] = useState("");
 
   const { subtotal, discount, total } = useMemo(() => {
@@ -45,7 +49,9 @@ function Cart() {
 
   return (
     <div style={{ padding: 20 }}>
-      <h1>ðŸ›’ Cart</h1>
+      <h1>
+        {cartIcon} Cart
+      </h1>
 
       {items.length === 0 && <p>Cart is empty</p>}
 
@@ -60,7 +66,10 @@ function Cart() {
           }}
         >
           <h3 style={{ margin: "0 0 6px" }}>{item.title}</h3>
-          <p style={{ margin: "0 0 10px" }}>â‚¦{item.price}</p>
+          <p style={{ margin: "0 0 10px" }}>
+            {naira}
+            {Number(item.price).toLocaleString()}
+          </p>
 
           <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
             <input
@@ -95,13 +104,16 @@ function Cart() {
       >
         <h2 style={{ marginTop: 0 }}>Summary</h2>
         <p style={{ margin: "6px 0" }}>
-          Subtotal: â‚¦{subtotal.toLocaleString()}
+          Subtotal: {naira}
+          {subtotal.toLocaleString()}
         </p>
         <p style={{ margin: "6px 0" }}>
-          Discount: -â‚¦{discount.toLocaleString()}
+          Discount: -{naira}
+          {discount.toLocaleString()}
         </p>
         <h2 style={{ margin: "10px 0 0" }}>
-          Total: â‚¦{total.toLocaleString()}
+          Total: {naira}
+          {total.toLocaleString()}
         </h2>
 
         <div style={{ marginTop: 15 }}>
@@ -157,13 +169,23 @@ function Cart() {
 
       <hr />
 
-      <h2>ðŸ“¦ Orders (Preview)</h2>
+      <h2>
+        {ordersIcon} Orders (Preview)
+      </h2>
 
       {orders.map((order) => (
-        <div key={order.id} style={{ padding: 10, borderBottom: "1px solid #eee" }}>
+        <div
+          key={order.id}
+          style={{ padding: 10, borderBottom: "1px solid #eee" }}
+        >
           <p style={{ margin: "4px 0" }}>Order ID: {order.id}</p>
-          <p style={{ margin: "4px 0" }}>Total: â‚¦{order.total}</p>
-          {order.coupon && <p style={{ margin: "4px 0" }}>Coupon: {order.coupon}</p>}
+          <p style={{ margin: "4px 0" }}>
+            Total: {naira}
+            {Number(order.total).toLocaleString()}
+          </p>
+          {order.coupon && (
+            <p style={{ margin: "4px 0" }}>Coupon: {order.coupon}</p>
+          )}
         </div>
       ))}
     </div>
