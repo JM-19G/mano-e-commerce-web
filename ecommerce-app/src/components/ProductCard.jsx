@@ -19,7 +19,7 @@ function ProductCard({ product, onAdd }) {
         border: "1px solid #e5e7eb",
         borderRadius: 12,
         overflow: "hidden",
-        background: "white",
+        background: "var(--surface)",
         boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
       }}
     >
@@ -27,7 +27,7 @@ function ProductCard({ product, onAdd }) {
         to={`/product/${product.id}`}
         style={{ textDecoration: "none", color: "inherit" }}
       >
-        <div style={{ background: "#f3f4f6" }}>
+        <div style={{ background: "var(--surface-2)" }}>
           <img
             src={product.image}
             alt={product.title}

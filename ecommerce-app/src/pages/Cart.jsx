@@ -115,6 +115,7 @@ function Cart() {
                 padding: 12,
                 marginBottom: 12,
                 textAlign: "left",
+                background: "var(--surface)",
               }}
             >
               <h3 style={{ margin: "0 0 6px" }}>{item.title}</h3>
@@ -159,6 +160,7 @@ function Cart() {
             border: "1px solid #ddd",
             borderRadius: 8,
             textAlign: "left",
+            background: "var(--surface)",
           }}
         >
           <h2 style={{ marginTop: 0 }}>Summary</h2>

@@ -27,6 +27,7 @@ function Orders() {
               marginBottom: 15,
               padding: 12,
               borderRadius: 8,
+              background: "var(--surface)",
             }}
           >
             <p style={{ margin: "4px 0" }}>
@@ -70,4 +71,3 @@ function Orders() {
 }
 
 export default Orders;
-

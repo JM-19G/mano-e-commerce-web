@@ -32,6 +32,11 @@ function Home() {
   const allTags = [...new Set(products.flatMap((p) => p.tags || []))];
   const allLocations = [...new Set(products.map((p) => p.location))];
 
+  const handleLogout = () => {
+    localStorage.removeItem("currentUser");
+    window.location.href = "/login";
+  };
+
   const handleSearch = useMemo(
     () => debounce((value) => setSearch(value), 300),
     []
@@ -43,17 +48,24 @@ function Home() {
     return products.filter((product) => {
       const matchCategory =
         selectedCategory === "All" || product.category === selectedCategory;
+
       const matchSearch = product.title
         .toLowerCase()
         .includes(search.toLowerCase());
+
       const matchPrice =
-        product.price >= priceRange[0] && product.price <= priceRange[1];
+        product.price >= priceRange[0] &&
+        product.price <= priceRange[1];
+
       const matchLocation =
-        selectedLocation === "All" || product.location === selectedLocation;
+        selectedLocation === "All" ||
+        product.location === selectedLocation;
 
       const matchTags =
         selectedTags.length === 0 ||
-        selectedTags.every((tag) => product.tags?.includes(tag));
+        selectedTags.every((tag) =>
+          product.tags?.includes(tag)
+        );
 
       return (
         matchCategory &&
@@ -75,11 +87,11 @@ function Home() {
 
   return (
     <div>
-      <h1>
-        {leafIcon} Agro Market
-      </h1>
+      {/* HEADER */}
+      <h1>{leafIcon} Agro Market</h1>
       <h2>Cart Items: {cartItems.length}</h2>
 
+      {/* SEARCH */}
       <input
         type="text"
         placeholder="Search products..."
@@ -89,11 +101,14 @@ function Home() {
           padding: 12,
           marginBottom: 20,
           borderRadius: 8,
-          border: "1px solid #ccc",
+          border: "1px solid var(--border)",
           fontSize: 16,
+          background: "var(--surface)",
+          color: "var(--text-h)",
         }}
       />
 
+      {/* CATEGORY */}
       <div style={{ marginBottom: 15 }}>
         {categories.map((cat) => (
           <button
@@ -103,8 +118,14 @@ function Home() {
               marginRight: 8,
               marginBottom: 8,
               padding: "8px 14px",
-              background: selectedCategory === cat ? "#2e7d32" : "#f0f0f0",
-              color: selectedCategory === cat ? "white" : "black",
+              background:
+                selectedCategory === cat
+                  ? "#2e7d32"
+                  : "var(--surface)",
+              color:
+                selectedCategory === cat
+                  ? "white"
+                  : "var(--text-h)",
               border: "none",
               borderRadius: 6,
               cursor: "pointer",
@@ -115,28 +136,44 @@ function Home() {
         ))}
       </div>
 
+      {/* PRICE */}
       <div style={{ marginBottom: 15 }}>
         <p>
           <strong>Price Range:</strong> {naira}
           {priceRange[0].toLocaleString()} - {naira}
           {priceRange[1].toLocaleString()}
         </p>
+
         <input
           type="range"
           min="0"
           max="200000"
           step="1000"
           value={priceRange[1]}
-          onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
+          onChange={(e) =>
+            setPriceRange([
+              priceRange[0],
+              Number(e.target.value),
+            ])
+          }
           style={{ width: "100%" }}
         />
       </div>
 
+      {/* LOCATION */}
       <div style={{ marginBottom: 15 }}>
         <select
           value={selectedLocation}
-          onChange={(e) => setSelectedLocation(e.target.value)}
-          style={{ padding: 10, width: "100%", marginBottom: 10 }}
+          onChange={(e) =>
+            setSelectedLocation(e.target.value)
+          }
+          style={{
+            padding: 10,
+            width: "100%",
+            marginBottom: 10,
+            borderRadius: 8,
+            border: "1px solid var(--border)",
+          }}
         >
           <option value="All">All Locations</option>
           {allLocations.map((loc) => (
@@ -147,10 +184,12 @@ function Home() {
         </select>
       </div>
 
+      {/* TAGS */}
       <div style={{ marginBottom: 20 }}>
         <p>
           <strong>Tags:</strong>
         </p>
+
         <div>
           {allTags.map((tag) => (
             <button
@@ -159,8 +198,12 @@ function Home() {
               style={{
                 margin: "4px",
                 padding: "6px 12px",
-                background: selectedTags.includes(tag) ? "#2e7d32" : "#f0f0f0",
-                color: selectedTags.includes(tag) ? "white" : "black",
+                background: selectedTags.includes(tag)
+                  ? "#2e7d32"
+                  : "var(--surface)",
+                color: selectedTags.includes(tag)
+                  ? "white"
+                  : "var(--text-h)",
                 border: "none",
                 borderRadius: 20,
                 cursor: "pointer",
@@ -172,10 +215,12 @@ function Home() {
         </div>
       </div>
 
+      {/* PRODUCTS */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+          gridTemplateColumns:
+            "repeat(auto-fit, minmax(240px, 1fr))",
           gap: 20,
         }}
       >
@@ -185,7 +230,10 @@ function Home() {
             product={product}
             onAdd={(item) => {
               dispatch(addToCart(item));
-              toast(`Added ${item.title} to cart`, { type: "success" });
+              toast(
+                `Added ${item.title} to cart`,
+                { type: "success" }
+              );
             }}
           />
         ))}
@@ -194,6 +242,23 @@ function Home() {
       {filteredProducts.length === 0 && (
         <p>No products found matching your filters.</p>
       )}
+
+      {/* ✅ LOGOUT AT BOTTOM */}
+      <div style={{ marginTop: 40, textAlign: "center" }}>
+        <button
+          onClick={handleLogout}
+          style={{
+            padding: "10px 20px",
+            background: "#c62828",
+            color: "white",
+            border: "none",
+            borderRadius: 6,
+            cursor: "pointer",
+          }}
+        >
+          Logout
+        </button>
+      </div>
     </div>
   );
 }
