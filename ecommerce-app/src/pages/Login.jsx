@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 
 function Login() {
   const navigate = useNavigate();
@@ -11,10 +10,10 @@ function Login() {
   });
 
   useEffect(() => {
-  const user = localStorage.getItem("currentUser");
+    const user = localStorage.getItem("currentUser");
     if (user) {
-    navigate("/home");
-     }
+      navigate("/home");
+    }
   }, []);
 
   const handleLogin = () => {
@@ -31,74 +30,107 @@ function Login() {
       return;
     }
 
-    localStorage.setItem(
-      "currentUser",
-      JSON.stringify(user)
-    );
-
-    alert("Login successful");
-
+    localStorage.setItem("currentUser", JSON.stringify(user));
     navigate("/home");
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        height: "100vh",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#f5f5f5",
-      }}
-     >
-      <div
-        style={{
-          width: 320,
-          padding: 20,
-          background: "white",
-          borderRadius: 10,
-          boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-        }}
-       >
-       <h2 style={{ textAlign: "center" }}>Login</h2>
+    <div style={styles.container}>
+      <div style={styles.card}>
+        <h2 style={styles.title}>Welcome Back 👋</h2>
 
         <input
-         placeholder="Email"
-         onChange={(e) =>
-          setForm({ ...form, email: e.target.value })
-         }
-         style={{ width: "100%", marginBottom: 10, padding: 10 }}
+          type="email"
+          placeholder="Enter your email"
+          value={form.email}
+          onChange={(e) =>
+            setForm({ ...form, email: e.target.value })
+          }
+          style={styles.input}
         />
 
         <input
-         type="password"
-         placeholder="Password"
-         onChange={(e) =>
-          setForm({ ...form, password: e.target.value })
-         }
-         style={{ width: "100%", marginBottom: 10, padding: 10 }}
+          type="password"
+          placeholder="Enter your password"
+          value={form.password}
+          onChange={(e) =>
+            setForm({ ...form, password: e.target.value })
+          }
+          style={styles.input}
         />
 
-        <button
-         onClick={handleLogin}
-          style={{
-            width: "100%",
-            padding: 10,
-            background: "#2e7d32",
-            color: "white",
-            border: "none",
-            borderRadius: 5,
-          }}
-         >
-         Login
+        <button onClick={handleLogin} style={styles.button}>
+          Login
         </button>
 
-        <p style={{ textAlign: "center", marginTop: 10 }}>
-          No account? <a href="/register">Register</a>
+        <p style={styles.text}>
+          Don’t have an account?{" "}
+          <span
+            style={styles.link}
+            onClick={() => navigate("/register")}
+          >
+            Register
+          </span>
         </p>
       </div>
     </div>
   );
 }
+
+const styles = {
+  container: {
+    height: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    background: "#f4f6f8",
+  },
+  card: {
+    width: 380, // 👈 wider = more professional
+    padding: 30,
+    background: "#ffffff",
+    borderRadius: 12,
+    boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+    display: "flex",
+    flexDirection: "column",
+  },
+  title: {
+    textAlign: "center",
+    marginBottom: 25,
+    fontWeight: "600",
+  },
+  input: {
+    width: "100%",
+    padding: "14px 16px", // 👈 bigger input
+    marginBottom: 15,
+    borderRadius: 8,
+    border: "1px solid #ddd",
+    fontSize: 15,
+    outline: "none",
+    transition: "0.2s",
+  },
+  button: {
+    width: "100%",
+    padding: 14,
+    background: "#2e7d32",
+    color: "white",
+    border: "none",
+    borderRadius: 8,
+    fontSize: 16,
+    cursor: "pointer",
+    marginTop: 5,
+  },
+  text: {
+    textAlign: "center",
+    marginTop: 15,
+    fontSize: 14,
+    color: "#555",
+  },
+  link: {
+    color: "#2e7d32",
+    cursor: "pointer",
+    fontWeight: "600",
+  },
+};
 
 export default Login;
