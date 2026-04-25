@@ -96,17 +96,14 @@ function Navbar() {
       {/* RIGHT */}
       {!isMobile && (
         <div style={styles.right}>
+          <span style={styles.user}>
+            👤 {user?.name || "User"}
+          </span>
+
           <button onClick={toggleTheme} style={styles.theme}>
             {theme === "dark" ? sun : moon}
           </button>
 
-          <span style={styles.user}>
-            {user?.name || "User"}
-          </span>
-
-          <button onClick={handleLogout} style={styles.logout}>
-            Logout
-          </button>
         </div>
       )}
     </div>

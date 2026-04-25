@@ -243,21 +243,42 @@ function Home() {
         <p>No products found matching your filters.</p>
       )}
 
-      {/* ✅ LOGOUT AT BOTTOM */}
-      <div style={{ marginTop: 40, textAlign: "center" }}>
+      {/* 🔻 FOOTER / ACCOUNT SECTION */}
+      <div
+        style={{
+          marginTop: 40,
+          padding: 20,
+          borderTop: "1px solid #eee",
+          textAlign: "center",
+          color: "#555",
+        }}
+       >
+        <p style={{ marginBottom: 10 }}>
+         🌾 You’re exploring the Agro Market — connecting farmers and buyers easily.
+        </p>
+
+        <p style={{ fontSize: 14, marginBottom: 20 }}>
+          Tip: Use filters to quickly find seeds, livestock, and equipment near you.
+        </p>
+
         <button
           onClick={handleLogout}
           style={{
-            padding: "10px 20px",
+            padding: "10px 18px",
             background: "#c62828",
             color: "white",
             border: "none",
-            borderRadius: 6,
+            borderRadius: 8,
             cursor: "pointer",
+            fontWeight: "bold",
           }}
-        >
-          Logout
+         >
+         Logout
         </button>
+
+        <p style={{ marginTop: 20, fontSize: 12, color: "#999" }}>
+          © 2026 Agro Market • Built for smart farming 🚜
+        </p>
       </div>
     </div>
   );

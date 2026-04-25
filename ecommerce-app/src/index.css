@@ -32,11 +32,11 @@
   }
 }
 
-:root[data-theme="light"] {
+html[data-theme="dark"] {
   color-scheme: light;
 }
 
-:root[data-theme="dark"] {
+html[data-theme="light"] {
   color-scheme: dark;
   --text: #9ca3af;
   --text-h: #f3f4f6;
