@@ -100,7 +100,7 @@ const styles = {
     fontWeight: "600",
   },
   input: {
-    width: "100%",
+    width: "90%",
     padding: "14px 16px", // 👈 bigger input
     marginBottom: 15,
     borderRadius: 8,

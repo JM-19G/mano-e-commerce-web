@@ -60,7 +60,7 @@ function Layout({ children }) {
         </div>
       </nav>
 
-      <div style={{ padding: 20 }}>{children}</div>
+      <div style={{ padding: 30 }}>{children}</div>
     </div>
   );
 }
