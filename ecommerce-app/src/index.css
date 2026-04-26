@@ -6,36 +6,34 @@
   --border: #e5e7eb;
 }
 
-/* 🌄 BACKGROUND IMAGE */
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
-  color: var(--text);
 
-  background: url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1974&auto=format&fit=crop")
-    no-repeat center center fixed;
+  /* ✅ STRONGER IMAGE (won’t fail) */
+  background-image: url("https://images.unsplash.com/photo-1492496913980-501348b61469");
   background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
-/* 🔥 BLUR OVERLAY */
+/* ✅ CLEAN BLUR OVERLAY */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
-  backdrop-filter: blur(8px);
-  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(6px);
+  background: rgba(255, 255, 255, 0.5);
   z-index: -1;
 }
 
-/* 📦 APP CONTAINER */
+/* ✅ IMPORTANT: MAKE ROOT TRANSPARENT */
 #root {
   max-width: 1200px;
   margin: 20px auto;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.85); /* not solid white */
   border-radius: 12px;
   min-height: 100vh;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  overflow: hidden;
 }
 
 /* HEADINGS */

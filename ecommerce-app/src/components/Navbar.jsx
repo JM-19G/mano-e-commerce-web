@@ -1,5 +1,4 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useTheme } from "../hooks/useTheme";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 
@@ -11,30 +10,21 @@ function Navbar() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const user = JSON.parse(localStorage.getItem("currentUser"));
-  const { theme, toggleTheme } = useTheme();
+
   const cartItems = useSelector((state) => state.cart.items);
+  const wishlistItems = useSelector((state) => state.wishlist.items);
 
   const isActive = (path) => location.pathname === path;
 
-  // RESPONSIVE FIX
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // 🔥 DYNAMIC STYLE (THIS FIXES YOUR ISSUE)
-  const dynamicNavbarStyle = {
-    ...styles.navbar,
-    background:
-      theme === "dark"
-        ? "rgba(17, 24, 39, 0.85)"
-        : "rgba(255, 255, 255, 0.85)",
-  };
-
   return (
-    <div style={dynamicNavbarStyle}>
-      {/* LEFT LOGO */}
+    <div style={styles.navbar}>
+      {/* LOGO */}
       <div style={styles.logo} onClick={() => navigate("/home")}>
         🌾 Agro Market
       </div>
@@ -62,12 +52,18 @@ function Navbar() {
             Home
           </Link>
 
+          {/* ✅ WISHLIST WITH COUNT */}
           <Link
             to="/wishlist"
             style={isActive("/wishlist") ? styles.activeLink : styles.link}
             onClick={() => setMenuOpen(false)}
           >
             Wishlist
+            {wishlistItems.length > 0 && (
+              <span style={styles.badge}>
+                {wishlistItems.length}
+              </span>
+            )}
           </Link>
 
           <Link
@@ -88,16 +84,12 @@ function Navbar() {
         </div>
       )}
 
-      {/* RIGHT SIDE */}
+      {/* RIGHT */}
       {!isMobile && (
         <div style={styles.right}>
           <span style={styles.user}>
-             {user?.name || "User"} 👤
+            👤 {user?.name || "User"}
           </span>
-
-          {/* <button onClick={toggleTheme} style={styles.themeBtn}>
-            {theme === "dark" ? "☀️" : "🌙"}
-          </button> */}
         </div>
       )}
     </div>
@@ -113,30 +105,29 @@ const styles = {
     position: "sticky",
     top: 0,
     zIndex: 1000,
-
-    // ✅ THEME-AWARE GLASS
-    background: "rgba(255,255,255,0.6)",
-    backdropFilter: "blur(12px)",
-    borderBottom: "1px solid var(--border)",
-    color: "var(--text-h)",
+    background: "rgba(255,255,255,0.85)",
+    backdropFilter: "blur(10px)",
+    borderBottom: "1px solid #eee",
   },
 
   logo: {
     fontSize: 20,
     fontWeight: "bold",
     cursor: "pointer",
-    color: "var(--text-h)",
+    color: "#2e7d32",
   },
 
   links: {
     display: "flex",
     gap: 20,
+    alignItems: "center",
   },
 
   link: {
     textDecoration: "none",
-    color: "var(--text)",
+    color: "#333",
     fontWeight: 500,
+    position: "relative",
   },
 
   activeLink: {
@@ -147,28 +138,26 @@ const styles = {
     paddingBottom: 2,
   },
 
+  badge: {
+    marginLeft: 6,
+    background: "#2e7d32",
+    color: "white",
+    borderRadius: 10,
+    padding: "2px 6px",
+    fontSize: 11,
+  },
+
   right: {
     display: "flex",
     alignItems: "center",
-    gap: 12,
   },
 
   user: {
+    color: "#333",
     fontWeight: 500,
-    color: "var(--text-h)",
-  },
-
-  theme: {
-    border: "1px solid var(--border)",
-    background: "var(--surface)",
-    color: "var(--text-h)",
-    padding: "6px 10px",
-    borderRadius: "50%",
-    cursor: "pointer",
   },
 
   hamburger: {
-    display: "none",
     fontSize: 22,
     cursor: "pointer",
   },
@@ -178,7 +167,7 @@ const styles = {
     top: 60,
     left: 0,
     width: "100%",
-    background: "var(--surface)",
+    background: "white",
     flexDirection: "column",
     padding: 20,
     gap: 15,

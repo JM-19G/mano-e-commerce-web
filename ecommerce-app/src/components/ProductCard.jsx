@@ -54,11 +54,11 @@ function ProductCard({ product, onAdd }) {
           background: "white",
           border: "none",
           borderRadius: "50%",
-          width: 36,
-          height: 36,
+          width: 30,
+          height: 30,
           cursor: "pointer",
           boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
-          fontSize: 18,
+          fontSize: 14,
           zIndex: 10,
         }}
       >
