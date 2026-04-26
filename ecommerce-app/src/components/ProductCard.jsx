@@ -1,10 +1,19 @@
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addToWishlist,
+  removeFromWishlist,
+} from "../features/wishlist/wishlistSlice";
 
 function ProductCard({ product, onAdd }) {
+  const dispatch = useDispatch();
+  const wishlist = useSelector((state) => state.wishlist.items);
+
   if (!product) return <h2>Product not found</h2>;
 
   const naira = "\u20A6";
   const bullet = "\u2022";
+
   const price =
     typeof product.price === "number"
       ? product.price
@@ -13,21 +22,54 @@ function ProductCard({ product, onAdd }) {
   const stock = typeof product.stock === "number" ? product.stock : null;
   const outOfStock = stock === 0;
 
+  const isWishlisted = wishlist.some((item) => item.id === product.id);
+
+  const handleWishlist = () => {
+    if (isWishlisted) {
+      dispatch(removeFromWishlist(product.id));
+    } else {
+      dispatch(addToWishlist(product));
+    }
+  };
+
   return (
     <div
       style={{
+        position: "relative",
         border: "1px solid #e5e7eb",
         borderRadius: 12,
         overflow: "hidden",
-        background: "var(--surface)",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
+        background: "white",
+        boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
+        transition: "transform 0.2s ease",
       }}
     >
+      {/* ❤️ WISHLIST BUTTON */}
+      <button
+        onClick={handleWishlist}
+        style={{
+          position: "absolute",
+          top: 10,
+          right: 10,
+          background: "white",
+          border: "none",
+          borderRadius: "50%",
+          width: 36,
+          height: 36,
+          cursor: "pointer",
+          boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
+          fontSize: 18,
+          zIndex: 10,
+        }}
+      >
+        {isWishlisted ? "❤️" : "🤍"}
+      </button>
+
       <Link
         to={`/product/${product.id}`}
         style={{ textDecoration: "none", color: "inherit" }}
       >
-        <div style={{ background: "var(--surface-2)" }}>
+        <div style={{ background: "#f3f4f6" }}>
           <img
             src={product.image}
             alt={product.title}

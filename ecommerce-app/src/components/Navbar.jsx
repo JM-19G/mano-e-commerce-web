@@ -92,12 +92,12 @@ function Navbar() {
       {!isMobile && (
         <div style={styles.right}>
           <span style={styles.user}>
-            👤 {user?.name || "User"}
+             {user?.name || "User"} 👤
           </span>
 
-          <button onClick={toggleTheme} style={styles.themeBtn}>
+          {/* <button onClick={toggleTheme} style={styles.themeBtn}>
             {theme === "dark" ? "☀️" : "🌙"}
-          </button>
+          </button> */}
         </div>
       )}
     </div>
@@ -113,8 +113,12 @@ const styles = {
     position: "sticky",
     top: 0,
     zIndex: 1000,
+
+    // ✅ THEME-AWARE GLASS
+    background: "rgba(255,255,255,0.6)",
     backdropFilter: "blur(12px)",
     borderBottom: "1px solid var(--border)",
+    color: "var(--text-h)",
   },
 
   logo: {
@@ -131,7 +135,7 @@ const styles = {
 
   link: {
     textDecoration: "none",
-    color: "var(--text-h)",
+    color: "var(--text)",
     fontWeight: 500,
   },
 
@@ -154,19 +158,19 @@ const styles = {
     color: "var(--text-h)",
   },
 
-  themeBtn: {
+  theme: {
     border: "1px solid var(--border)",
     background: "var(--surface)",
+    color: "var(--text-h)",
     padding: "6px 10px",
     borderRadius: "50%",
     cursor: "pointer",
-    color: "var(--text-h)",
   },
 
   hamburger: {
+    display: "none",
     fontSize: 22,
     cursor: "pointer",
-    color: "var(--text-h)",
   },
 
   mobileMenu: {
@@ -178,7 +182,6 @@ const styles = {
     flexDirection: "column",
     padding: 20,
     gap: 15,
-    borderBottom: "1px solid var(--border)",
   },
 };
 
