@@ -13,30 +13,21 @@ function Register() {
   const handleRegister = () => {
     const users = JSON.parse(localStorage.getItem("users")) || [];
 
-    const exists = users.find(
-      (u) => u.email === form.email
-    );
-
-    if (exists) {
-      alert("User already exists");
-      return;
-    }
-
     users.push(form);
+
     localStorage.setItem("users", JSON.stringify(users));
 
-    alert("Registration successful!");
+    alert("Registration successful");
     navigate("/");
   };
 
   return (
-    <div style={styles.container}>
+    <div style={styles.page}>
       <div style={styles.card}>
-        <h2 style={styles.title}>Create Account</h2>
+        <h2 style={styles.title}>Create Account 🌱</h2>
 
         <input
-          placeholder="Full name"
-          value={form.name}
+          placeholder="Name"
           onChange={(e) =>
             setForm({ ...form, name: e.target.value })
           }
@@ -44,9 +35,7 @@ function Register() {
         />
 
         <input
-          type="email"
-          placeholder="Email address"
-          value={form.email}
+          placeholder="Email"
           onChange={(e) =>
             setForm({ ...form, email: e.target.value })
           }
@@ -56,7 +45,6 @@ function Register() {
         <input
           type="password"
           placeholder="Password"
-          value={form.password}
           onChange={(e) =>
             setForm({ ...form, password: e.target.value })
           }
@@ -69,10 +57,7 @@ function Register() {
 
         <p style={styles.text}>
           Already have an account?{" "}
-          <span
-            style={styles.link}
-            onClick={() => navigate("/")}
-          >
+          <span onClick={() => navigate("/")} style={styles.link}>
             Login
           </span>
         </p>
@@ -82,47 +67,55 @@ function Register() {
 }
 
 const styles = {
-  container: {
+  page: {
     height: "100vh",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background: "#f4f6f8",
+    background: "var(--bg)",
   },
+
   card: {
     width: 350,
-    padding: 30,
-    background: "white",
+    padding: 25,
     borderRadius: 12,
-    boxShadow: "0 8px 25px rgba(0,0,0,0.1)",
-    display: "flex",
-    flexDirection: "column",
+    background: "var(--surface)",
+    boxShadow: "var(--shadow)",
   },
+
   title: {
     textAlign: "center",
     marginBottom: 20,
+    color: "var(--text-h)",
   },
+
   input: {
-    padding: "12px 14px",
+    width: "100%",
+    padding: 12,
     marginBottom: 15,
     borderRadius: 8,
-    border: "1px solid #ccc",
-    fontSize: 15,
+    border: "1px solid var(--border)",
+    background: "var(--surface-2)",
+    color: "var(--text-h)",
   },
+
   button: {
+    width: "100%",
     padding: 12,
     background: "#2e7d32",
     color: "white",
     border: "none",
     borderRadius: 8,
-    fontSize: 16,
     cursor: "pointer",
+    fontWeight: "bold",
   },
+
   text: {
     textAlign: "center",
     marginTop: 15,
-    fontSize: 14,
+    color: "var(--text)",
   },
+
   link: {
     color: "#2e7d32",
     cursor: "pointer",

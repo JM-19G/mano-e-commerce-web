@@ -14,39 +14,34 @@ function Navbar() {
   const { theme, toggleTheme } = useTheme();
   const cartItems = useSelector((state) => state.cart.items);
 
-  const sun = "☀️";
-  const moon = "🌙";
-
-  const handleLogout = () => {
-    localStorage.removeItem("currentUser");
-    navigate("/");
-  };
-
   const isActive = (path) => location.pathname === path;
 
-  // ✅ MAKE RESPONSIVE WORK PROPERLY
+  // RESPONSIVE FIX
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // 🔥 DYNAMIC STYLE (THIS FIXES YOUR ISSUE)
+  const dynamicNavbarStyle = {
+    ...styles.navbar,
+    background:
+      theme === "dark"
+        ? "rgba(17, 24, 39, 0.85)"
+        : "rgba(255, 255, 255, 0.85)",
+  };
+
   return (
-    <div style={styles.navbar}>
-      {/* LEFT */}
+    <div style={dynamicNavbarStyle}>
+      {/* LEFT LOGO */}
       <div style={styles.logo} onClick={() => navigate("/home")}>
         🌾 Agro Market
       </div>
 
-      {/* HAMBURGER (ONLY MOBILE) */}
+      {/* HAMBURGER */}
       {isMobile && (
-        <div
-          style={styles.hamburger}
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
+        <div style={styles.hamburger} onClick={() => setMenuOpen(!menuOpen)}>
           ☰
         </div>
       )}
@@ -93,17 +88,16 @@ function Navbar() {
         </div>
       )}
 
-      {/* RIGHT */}
+      {/* RIGHT SIDE */}
       {!isMobile && (
         <div style={styles.right}>
           <span style={styles.user}>
             👤 {user?.name || "User"}
           </span>
 
-          <button onClick={toggleTheme} style={styles.theme}>
-            {theme === "dark" ? sun : moon}
+          <button onClick={toggleTheme} style={styles.themeBtn}>
+            {theme === "dark" ? "☀️" : "🌙"}
           </button>
-
         </div>
       )}
     </div>
@@ -119,18 +113,15 @@ const styles = {
     position: "sticky",
     top: 0,
     zIndex: 1000,
-
-    // ✨ GLASS EFFECT
-    background: "rgba(255, 255, 255, 0.6)",
-    backdropFilter: "blur(10px)",
-    borderBottom: "1px solid rgba(255,255,255,0.3)",
+    backdropFilter: "blur(12px)",
+    borderBottom: "1px solid var(--border)",
   },
 
   logo: {
     fontSize: 20,
     fontWeight: "bold",
     cursor: "pointer",
-    color: "#2e7d32",
+    color: "var(--text-h)",
   },
 
   links: {
@@ -140,7 +131,7 @@ const styles = {
 
   link: {
     textDecoration: "none",
-    color: "#333",
+    color: "var(--text-h)",
     fontWeight: 500,
   },
 
@@ -160,29 +151,22 @@ const styles = {
 
   user: {
     fontWeight: 500,
-    color: "#444",
+    color: "var(--text-h)",
   },
 
-  logout: {
-    padding: "6px 12px",
-    background: "#c62828",
-    color: "white",
-    border: "none",
-    borderRadius: 6,
-    cursor: "pointer",
-  },
-
-  theme: {
-    border: "none",
-    background: "#eee",
+  themeBtn: {
+    border: "1px solid var(--border)",
+    background: "var(--surface)",
     padding: "6px 10px",
     borderRadius: "50%",
     cursor: "pointer",
+    color: "var(--text-h)",
   },
 
   hamburger: {
     fontSize: 22,
     cursor: "pointer",
+    color: "var(--text-h)",
   },
 
   mobileMenu: {
@@ -190,10 +174,11 @@ const styles = {
     top: 60,
     left: 0,
     width: "100%",
-    background: "rgba(255,255,255,0.95)",
+    background: "var(--surface)",
     flexDirection: "column",
     padding: 20,
     gap: 15,
+    borderBottom: "1px solid var(--border)",
   },
 };
 
