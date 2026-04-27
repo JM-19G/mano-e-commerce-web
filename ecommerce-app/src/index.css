@@ -6,37 +6,39 @@
   --border: #e5e7eb;
 }
 
+/* 🌄 FULL PAGE WALLPAPER */
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
+  color: var(--text);
 
-  /* ✅ STRONGER IMAGE (won’t fail) */
-  background-image: url("https://images.unsplash.com/photo-1492496913980-501348b61469");
+  background:
+    linear-gradient(rgba(255,255,255,0.75), rgba(255,255,255,0.75)),
+    url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1600&auto=format&fit=crop");
+
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
 }
 
-/* ✅ CLEAN BLUR OVERLAY */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  backdrop-filter: blur(6px);
-  background: rgba(255, 255, 255, 0.5);
-  z-index: -1;
-}
+/* ❌ REMOVE the ::before blur (it was breaking things) */
 
-/* ✅ IMPORTANT: MAKE ROOT TRANSPARENT */
+/* ✅ MAIN APP CONTAINER (GLASS EFFECT) */
 #root {
   max-width: 1200px;
-  margin: 20px auto;
-  background: rgba(255, 255, 255, 0.85); /* not solid white */
-  border-radius: 12px;
+  margin: 30px auto;
+  padding: 20px;
+
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.4);
+
   min-height: 100vh;
+  box-sizing: border-box;
 }
 
-/* HEADINGS */
+/* TEXT */
 h1, h2 {
   color: var(--text-h);
 }
