@@ -20,7 +20,9 @@ body {
   background-attachment: fixed;
 }
 
-/* ❌ REMOVE the ::before blur (it was breaking things) */
+body {
+  background: red !important;
+}
 
 /* ✅ MAIN APP CONTAINER (GLASS EFFECT) */
 #root {
