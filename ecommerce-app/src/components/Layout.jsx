@@ -4,26 +4,25 @@ function Layout({ children }) {
   return (
     <div
       style={{
-        /* ❌ REMOVE solid background */
-        /* background: "var(--bg)", */
-
-        color: "var(--text)",
         minHeight: "100vh",
       }}
     >
+      {/*  NAVBAR STAYS ON TOP */}
       <Navbar />
 
-      {/* ✅ GLASS CONTAINER */}
+      {/*  MAIN CONTENT (NO GAP FROM TOP) */}
       <div
         style={{
-          padding: "30px 20px",
+          padding: "20px",
           maxWidth: 1200,
-          margin: "20px auto",
+          margin: "0 auto", // ❌ remove top margin
 
-          background: "rgba(255,255,255,0.85)",
+          background: "rgba(255,255,255,0.9)",
           backdropFilter: "blur(10px)",
-          borderRadius: 16,
+
+          borderRadius: "0 0 16px 16px", // 👈 smooth bottom only
           border: "1px solid rgba(255,255,255,0.4)",
+          borderTop: "none", // 👈 connect to navbar
         }}
       >
         {children}
