@@ -12,10 +12,11 @@ function Navbar() {
   const user = JSON.parse(localStorage.getItem("currentUser"));
 
   const cartItems = useSelector((state) => state.cart.items);
-  const wishlistItems = useSelector((state) => state.wishlist.items);
+  const wishlistItems = useSelector((state) => state.wishlist?.items || []);
 
   const isActive = (path) => location.pathname === path;
 
+  // ✅ HANDLE RESPONSIVE
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener("resize", handleResize);
@@ -26,7 +27,7 @@ function Navbar() {
     <div style={styles.navbar}>
       {/* LOGO */}
       <div style={styles.logo} onClick={() => navigate("/home")}>
-        🌾 Agro Market
+        🌾 AgroMarket
       </div>
 
       {/* HAMBURGER */}
@@ -52,18 +53,12 @@ function Navbar() {
             Home
           </Link>
 
-          {/* ✅ WISHLIST WITH COUNT */}
           <Link
             to="/wishlist"
             style={isActive("/wishlist") ? styles.activeLink : styles.link}
             onClick={() => setMenuOpen(false)}
           >
-            Wishlist
-            {wishlistItems.length > 0 && (
-              <span style={styles.badge}>
-                {wishlistItems.length}
-              </span>
-            )}
+            Wishlist ({wishlistItems.length})
           </Link>
 
           <Link
@@ -84,7 +79,7 @@ function Navbar() {
         </div>
       )}
 
-      {/* RIGHT */}
+      {/* RIGHT SIDE */}
       {!isMobile && (
         <div style={styles.right}>
           <span style={styles.user}>
@@ -101,13 +96,17 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "14px 20px",
+    padding: "14px 24px",
     position: "sticky",
     top: 0,
     zIndex: 1000,
-    background: "rgba(255,255,255,0.85)",
-    backdropFilter: "blur(10px)",
-    borderBottom: "1px solid #eee",
+
+    // 🔥 PREMIUM GLASS EFFECT
+    background: "rgba(255,255,255,0.75)",
+    backdropFilter: "blur(14px)",
+    WebkitBackdropFilter: "blur(14px)",
+
+    borderBottom: "1px solid rgba(0,0,0,0.05)",
   },
 
   logo: {
@@ -119,15 +118,14 @@ const styles = {
 
   links: {
     display: "flex",
-    gap: 20,
-    alignItems: "center",
+    gap: 24,
   },
 
   link: {
     textDecoration: "none",
-    color: "#333",
+    color: "#444",
     fontWeight: 500,
-    position: "relative",
+    transition: "0.2s",
   },
 
   activeLink: {
@@ -138,27 +136,23 @@ const styles = {
     paddingBottom: 2,
   },
 
-  badge: {
-    marginLeft: 6,
-    background: "#2e7d32",
-    color: "white",
-    borderRadius: 10,
-    padding: "2px 6px",
-    fontSize: 11,
-  },
-
   right: {
     display: "flex",
     alignItems: "center",
+    gap: 12,
   },
 
   user: {
-    color: "#333",
     fontWeight: 500,
+    color: "#333",
+    background: "#f3f4f6",
+    padding: "6px 12px",
+    borderRadius: 20,
   },
 
+  // 📱 MOBILE
   hamburger: {
-    fontSize: 22,
+    fontSize: 24,
     cursor: "pointer",
   },
 
@@ -170,7 +164,8 @@ const styles = {
     background: "white",
     flexDirection: "column",
     padding: 20,
-    gap: 15,
+    gap: 16,
+    borderBottom: "1px solid #eee",
   },
 };
 
