@@ -9,20 +9,11 @@
 /* 🌄 FULL PAGE WALLPAPER */
 body {
   margin: 0;
-  color: var(--text);
-
-  background:
-    linear-gradient(rgba(255,255,255,0.75), rgba(255,255,255,0.75)),
-    url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1600&auto=format&fit=crop");
-
+  background: url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1600&auto=format&fit=crop") no-repeat center center fixed;
   background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
 }
 
-body {
-  background: red !important;
-}
+
 
 /* ✅ MAIN APP CONTAINER (GLASS EFFECT) */
 #root {
