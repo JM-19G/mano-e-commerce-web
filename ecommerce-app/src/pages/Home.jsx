@@ -5,6 +5,7 @@ import ProductCard from "../components/ProductCard";
 import { useToast } from "../hooks/useToast.js";
 import { addToCart } from "../features/cart/cartSlice";
 import products from "../data/products";
+import PageWrapper from "../components/PageWrapper";
 
 function Home() {
   const dispatch = useDispatch();
@@ -86,6 +87,7 @@ function Home() {
   };
 
   return (
+    <PageWrapper>
     <div>
       {/* HEADER */}
       <h1>{leafIcon} Agro Market</h1>
@@ -281,6 +283,7 @@ function Home() {
         </p>
       </div>
     </div>
+    </PageWrapper>
   );
 }
 

@@ -6,16 +6,13 @@
   --border: #e5e7eb;
 }
 
-/* 🌄 FULL PAGE WALLPAPER */
 body {
   margin: 0;
-  background: url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1600&auto=format&fit=crop") no-repeat center center fixed;
-  background-size: cover;
+  background: #f5f5f5;
 }
 
 
-
-/* ✅ MAIN APP CONTAINER (GLASS EFFECT) */
+/*  MAIN APP CONTAINER (GLASS EFFECT) */
 #root {
   max-width: 1200px;
   margin: 30px auto;
