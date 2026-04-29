@@ -12,7 +12,7 @@ function Login() {
   useEffect(() => {
     const user = localStorage.getItem("currentUser");
     if (user) navigate("/home");
-  }, []);
+  }, [navigate]); // ✅ add this
 
   const handleLogin = () => {
     const users = JSON.parse(localStorage.getItem("users")) || [];

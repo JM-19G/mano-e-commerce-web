@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Register() {
@@ -10,15 +10,42 @@ function Register() {
     password: "",
   });
 
+  // ✅ Prevent logged-in users from seeing register page
+  useEffect(() => {
+    const user = localStorage.getItem("currentUser");
+    if (user) navigate("/home");
+  }, []);
+
   const handleRegister = () => {
     const users = JSON.parse(localStorage.getItem("users")) || [];
 
-    users.push(form);
+    // ✅ Check if user already exists
+    const existingUser = users.find(
+      (u) => u.email === form.email
+    );
 
-    localStorage.setItem("users", JSON.stringify(users));
+    if (existingUser) {
+      alert("User already exists. Please login.");
+      navigate("/");
+      return;
+    }
+
+    const newUser = {
+      name: form.name,
+      email: form.email,
+      password: form.password,
+    };
+
+    // ✅ Save ALL users
+    localStorage.setItem("users", JSON.stringify([...users, newUser]));
+
+    // ✅ Log user in immediately
+    localStorage.setItem("currentUser", JSON.stringify(newUser));
 
     alert("Registration successful");
-    navigate("/");
+
+    // ✅ Go to home (NOT login)
+    navigate("/home");
   };
 
   return (

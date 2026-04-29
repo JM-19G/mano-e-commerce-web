@@ -1,3 +1,4 @@
+import PageWrapper from "../components/PageWrapper";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import debounce from "lodash.debounce";
@@ -5,7 +6,6 @@ import ProductCard from "../components/ProductCard";
 import { useToast } from "../hooks/useToast.js";
 import { addToCart } from "../features/cart/cartSlice";
 import products from "../data/products";
-import PageWrapper from "../components/PageWrapper";
 
 function Home() {
   const dispatch = useDispatch();
@@ -88,201 +88,209 @@ function Home() {
 
   return (
     <PageWrapper>
-    <div>
-      {/* HEADER */}
-      <h1>{leafIcon} Agro Market</h1>
-      <h2>Cart Items: {cartItems.length}</h2>
-
-      {/* SEARCH */}
-      <input
-        type="text"
-        placeholder="Search products..."
-        onChange={(e) => handleSearch(e.target.value)}
+      {/* 🔥 MAIN GLASS CONTAINER */}
+      <div
         style={{
-          width: "100%",
-          padding: 12,
-          marginBottom: 20,
-          borderRadius: 8,
-          border: "1px solid var(--border)",
-          fontSize: 16,
-          background: "var(--surface)",
-          color: "var(--text-h)",
+          maxWidth: 1200,
+          margin: "0 auto",
+          background: "rgba(255,255,255,0.92)",
+          borderRadius: 18,
+          padding: 24,
+          boxShadow: "0 20px 60px rgba(0,0,0,0.25)",
+          backdropFilter: "blur(6px)",
         }}
-      />
-
-      {/* CATEGORY */}
-      <div style={{ marginBottom: 15 }}>
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setSelectedCategory(cat)}
-            style={{
-              marginRight: 8,
-              marginBottom: 8,
-              padding: "8px 14px",
-              background:
-                selectedCategory === cat
-                  ? "#2e7d32"
-                  : "var(--surface)",
-              color:
-                selectedCategory === cat
-                  ? "white"
-                  : "var(--text-h)",
-              border: "none",
-              borderRadius: 6,
-              cursor: "pointer",
-            }}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
-      {/* PRICE */}
-      <div style={{ marginBottom: 15 }}>
-        <p>
-          <strong>Price Range:</strong> {naira}
-          {priceRange[0].toLocaleString()} - {naira}
-          {priceRange[1].toLocaleString()}
+      >
+        {/* HEADER */}
+        <h1 style={{ marginBottom: 5 }}>
+          {leafIcon} Agro Market
+        </h1>
+        <p style={{ marginBottom: 20, color: "#555" }}>
+          Cart Items: {cartItems.length}
         </p>
 
+        {/* SEARCH */}
         <input
-          type="range"
-          min="0"
-          max="200000"
-          step="1000"
-          value={priceRange[1]}
-          onChange={(e) =>
-            setPriceRange([
-              priceRange[0],
-              Number(e.target.value),
-            ])
-          }
-          style={{ width: "100%" }}
-        />
-      </div>
-
-      {/* LOCATION */}
-      <div style={{ marginBottom: 15 }}>
-        <select
-          value={selectedLocation}
-          onChange={(e) =>
-            setSelectedLocation(e.target.value)
-          }
+          type="text"
+          placeholder="Search products..."
+          onChange={(e) => handleSearch(e.target.value)}
           style={{
-            padding: 10,
             width: "100%",
-            marginBottom: 10,
-            borderRadius: 8,
-            border: "1px solid var(--border)",
+            padding: 14,
+            marginBottom: 20,
+            borderRadius: 10,
+            border: "1px solid #ddd",
+            fontSize: 15,
+          }}
+        />
+
+        {/* CATEGORY */}
+        <div style={{ marginBottom: 20 }}>
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              style={{
+                marginRight: 8,
+                marginBottom: 8,
+                padding: "8px 16px",
+                background:
+                  selectedCategory === cat
+                    ? "#2e7d32"
+                    : "#f3f4f6",
+                color:
+                  selectedCategory === cat
+                    ? "white"
+                    : "#333",
+                border: "none",
+                borderRadius: 20,
+                cursor: "pointer",
+                fontSize: 13,
+              }}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* FILTER BAR */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 15,
+            marginBottom: 20,
           }}
         >
-          <option value="All">All Locations</option>
-          {allLocations.map((loc) => (
-            <option key={loc} value={loc}>
-              {loc}
-            </option>
-          ))}
-        </select>
-      </div>
+          {/* PRICE */}
+          <div>
+            <p style={{ fontSize: 13, marginBottom: 5 }}>
+              Price: {naira}
+              {priceRange[0].toLocaleString()} - {naira}
+              {priceRange[1].toLocaleString()}
+            </p>
 
-      {/* TAGS */}
-      <div style={{ marginBottom: 20 }}>
-        <p>
-          <strong>Tags:</strong>
-        </p>
+            <input
+              type="range"
+              min="0"
+              max="200000"
+              step="1000"
+              value={priceRange[1]}
+              onChange={(e) =>
+                setPriceRange([
+                  priceRange[0],
+                  Number(e.target.value),
+                ])
+              }
+              style={{ width: "100%" }}
+            />
+          </div>
 
-        <div>
+          {/* LOCATION */}
+          <select
+            value={selectedLocation}
+            onChange={(e) =>
+              setSelectedLocation(e.target.value)
+            }
+            style={{
+              padding: 12,
+              borderRadius: 10,
+              border: "1px solid #ddd",
+            }}
+          >
+            <option value="All">All Locations</option>
+            {allLocations.map((loc) => (
+              <option key={loc} value={loc}>
+                {loc}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* TAGS */}
+        <div style={{ marginBottom: 25 }}>
           {allTags.map((tag) => (
             <button
               key={tag}
               onClick={() => toggleTag(tag)}
               style={{
-                margin: "4px",
+                margin: 4,
                 padding: "6px 12px",
                 background: selectedTags.includes(tag)
                   ? "#2e7d32"
-                  : "var(--surface)",
+                  : "#eee",
                 color: selectedTags.includes(tag)
                   ? "white"
-                  : "var(--text-h)",
+                  : "#333",
                 border: "none",
                 borderRadius: 20,
                 cursor: "pointer",
+                fontSize: 12,
               }}
             >
               {tag}
             </button>
           ))}
         </div>
-      </div>
 
-      {/* PRODUCTS */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns:
-            "repeat(auto-fit, minmax(240px, 1fr))",
-          gap: 20,
-        }}
-      >
-        {filteredProducts.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            onAdd={(item) => {
-              dispatch(addToCart(item));
-              toast(
-                `Added ${item.title} to cart`,
-                { type: "success" }
-              );
-            }}
-          />
-        ))}
-      </div>
-
-      {filteredProducts.length === 0 && (
-        <p>No products found matching your filters.</p>
-      )}
-
-      {/* 🔻 FOOTER / ACCOUNT SECTION */}
-      <div
-        style={{
-          marginTop: 40,
-          padding: 20,
-          borderTop: "1px solid #eee",
-          textAlign: "center",
-          color: "#555",
-        }}
-       >
-        <p style={{ marginBottom: 10 }}>
-         🌾 You’re exploring the Agro Market — connecting farmers and buyers easily.
-        </p>
-
-        <p style={{ fontSize: 14, marginBottom: 20 }}>
-          Tip: Use filters to quickly find seeds, livestock, and equipment near you.
-        </p>
-
-        <button
-          onClick={handleLogout}
+        {/* PRODUCTS */}
+        <div
           style={{
-            padding: "10px 18px",
-            background: "#c62828",
-            color: "white",
-            border: "none",
-            borderRadius: 8,
-            cursor: "pointer",
-            fontWeight: "bold",
+            display: "grid",
+            gridTemplateColumns:
+              "repeat(auto-fit, minmax(250px, 1fr))",
+            gap: 20,
           }}
-         >
-         Logout
-        </button>
+        >
+          {filteredProducts.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onAdd={(item) => {
+                dispatch(addToCart(item));
+                toast(`Added ${item.title}`, {
+                  type: "success",
+                });
+              }}
+            />
+          ))}
+        </div>
 
-        <p style={{ marginTop: 20, fontSize: 12, color: "#999" }}>
-          © 2026 Agro Market • Built for smart farming 🚜
-        </p>
+        {filteredProducts.length === 0 && (
+          <p style={{ marginTop: 20 }}>
+            No products found.
+          </p>
+        )}
+
+        {/* FOOTER */}
+        <div
+          style={{
+            marginTop: 40,
+            textAlign: "center",
+            color: "#666",
+          }}
+        >
+          <p>🌾 Connecting farmers & buyers easily</p>
+
+          <button
+            onClick={handleLogout}
+            style={{
+              marginTop: 15,
+              padding: "10px 20px",
+              background: "#c62828",
+              color: "white",
+              border: "none",
+              borderRadius: 8,
+              cursor: "pointer",
+            }}
+          >
+            Logout
+          </button>
+
+          <p style={{ marginTop: 10, fontSize: 12 }}>
+            © 2026 Agro Market
+          </p>
+        </div>
       </div>
-    </div>
     </PageWrapper>
   );
 }
