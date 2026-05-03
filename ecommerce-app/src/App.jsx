@@ -10,7 +10,9 @@ import Layout from "./components/Layout";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
+import ProductDetails from "./pages/ProductDetails";
 
+<Route path="/product/:id" element={<ProductDetails />} />
 function App() {
   return (
     <BrowserRouter>

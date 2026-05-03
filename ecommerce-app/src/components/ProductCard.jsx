@@ -9,7 +9,7 @@ function ProductCard({ product, onAdd }) {
   const dispatch = useDispatch();
   const wishlist = useSelector((state) => state.wishlist.items);
 
-  if (!product) return <h2>Product not found</h2>;
+  if (!product) return null;
 
   const naira = "\u20A6";
   const bullet = "\u2022";
@@ -24,7 +24,8 @@ function ProductCard({ product, onAdd }) {
 
   const isWishlisted = wishlist.some((item) => item.id === product.id);
 
-  const handleWishlist = () => {
+  const handleWishlist = (e) => {
+    e.preventDefault(); // ✅ prevents navigation when clicking heart
     if (isWishlisted) {
       dispatch(removeFromWishlist(product.id));
     } else {
@@ -33,61 +34,59 @@ function ProductCard({ product, onAdd }) {
   };
 
   return (
-    <div
-      style={{
-        position: "relative",
-        border: "1px solid #e5e7eb",
-        borderRadius: 12,
-        overflow: "hidden",
-        background: "white",
-        boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
-        transition: "transform 0.2s ease",
-      }}
+    <Link
+      to={`/product/${product.id}`}
+      style={{ textDecoration: "none", color: "inherit" }}
     >
-      {/* ❤️ WISHLIST BUTTON */}
-      <button
-        onClick={handleWishlist}
+      <div
         style={{
-          position: "absolute",
-          top: 10,
-          right: 10,
+          position: "relative",
+          border: "1px solid #e5e7eb",
+          borderRadius: 10,
+          overflow: "hidden",
           background: "white",
-          border: "none",
-          borderRadius: "50%",
-          width: 30,
-          height: 30,
-          cursor: "pointer",
-          boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
-          fontSize: 14,
-          zIndex: 10,
+          boxShadow: "0 4px 10px rgba(0,0,0,0.06)",
+          transition: "0.2s",
         }}
       >
-        {isWishlisted ? "❤️" : "🤍"}
-      </button>
+        {/* ❤️ Wishlist */}
+        <button
+          onClick={handleWishlist}
+          style={{
+            position: "absolute",
+            top: 8,
+            right: 8,
+            background: "white",
+            border: "none",
+            borderRadius: "50%",
+            width: 28,
+            height: 28,
+            cursor: "pointer",
+            fontSize: 14,
+            zIndex: 2,
+          }}
+        >
+          {isWishlisted ? "❤️" : "🤍"}
+        </button>
 
-      <Link
-        to={`/product/${product.id}`}
-        style={{ textDecoration: "none", color: "inherit" }}
-      >
-        <div style={{ background: "#f3f4f6" }}>
-          <img
-            src={product.image}
-            alt={product.title}
-            style={{
-              width: "100%",
-              height: 180,
-              objectFit: "cover",
-              display: "block",
-            }}
-          />
-        </div>
+        {/* IMAGE */}
+        <img
+          src={product.image}
+          alt={product.title}
+          style={{
+            width: "100%",
+            height: 160, // 👈 smaller height (cleaner grid)
+            objectFit: "cover",
+          }}
+        />
 
-        <div style={{ padding: 12 }}>
-          <h3 style={{ margin: "0 0 6px", fontSize: 16 }}>
+        {/* DETAILS */}
+        <div style={{ padding: 10 }}>
+          <h3 style={{ margin: "0 0 5px", fontSize: 14 }}>
             {product.title}
           </h3>
 
-          <p style={{ margin: "0 0 10px", fontSize: 13, color: "#6b7280" }}>
+          <p style={{ fontSize: 12, color: "#777", marginBottom: 6 }}>
             {product.category}
             {product.location ? ` ${bullet} ${product.location}` : ""}
           </p>
@@ -95,49 +94,52 @@ function ProductCard({ product, onAdd }) {
           <div
             style={{
               display: "flex",
-              alignItems: "baseline",
               justifyContent: "space-between",
-              gap: 10,
+              fontSize: 13,
             }}
           >
-            <span style={{ fontWeight: 700, color: "#2e7d32" }}>
+            <span style={{ color: "#2e7d32", fontWeight: "bold" }}>
               {naira}
-              {Number.isFinite(price) ? price.toLocaleString() : "0"}
+              {price.toLocaleString()}
             </span>
 
             {stock !== null && (
               <span
                 style={{
-                  fontSize: 12,
-                  color: outOfStock ? "#c62828" : "#2e7d32",
+                  color: outOfStock ? "red" : "#2e7d32",
+                  fontSize: 11,
                 }}
               >
-                {outOfStock ? "Out of stock" : `${stock} in stock`}
+                {outOfStock ? "Out" : stock}
               </span>
             )}
           </div>
         </div>
-      </Link>
 
-      <div style={{ padding: 12, paddingTop: 0 }}>
-        <button
-          onClick={() => onAdd?.(product)}
-          disabled={outOfStock}
-          style={{
-            width: "100%",
-            padding: "10px 12px",
-            borderRadius: 8,
-            border: "none",
-            cursor: outOfStock ? "not-allowed" : "pointer",
-            background: outOfStock ? "#d1d5db" : "#2e7d32",
-            color: "white",
-            fontWeight: 600,
-          }}
-        >
-          {outOfStock ? "Out of Stock" : "Add to Cart"}
-        </button>
+        {/* BUTTON */}
+        <div style={{ padding: 10 }}>
+          <button
+            onClick={(e) => {
+              e.preventDefault(); // ✅ stops link navigation
+              onAdd?.(product);
+            }}
+            disabled={outOfStock}
+            style={{
+              width: "100%",
+              padding: 8,
+              borderRadius: 6,
+              border: "none",
+              background: outOfStock ? "#ccc" : "#2e7d32",
+              color: "white",
+              cursor: outOfStock ? "not-allowed" : "pointer",
+              fontSize: 13,
+            }}
+          >
+            {outOfStock ? "Out of Stock" : "Add"}
+          </button>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
