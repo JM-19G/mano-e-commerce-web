@@ -1,6 +1,6 @@
 import PageWrapper from "../components/PageWrapper";
 import { useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import debounce from "lodash.debounce";
 import ProductCard from "../components/ProductCard";
 import { useToast } from "../hooks/useToast.js";
@@ -9,11 +9,7 @@ import products from "../data/products";
 
 function Home() {
   const dispatch = useDispatch();
-  const cartItems = useSelector((state) => state.cart.items);
   const { toast } = useToast();
-
-  const naira = "\u20A6";
-  const leafIcon = "\uD83C\uDF3E";
 
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -32,11 +28,6 @@ function Home() {
 
   const allTags = [...new Set(products.flatMap((p) => p.tags || []))];
   const allLocations = [...new Set(products.map((p) => p.location))];
-
-  const handleLogout = () => {
-    localStorage.removeItem("currentUser");
-    window.location.href = "/login";
-  };
 
   const handleSearch = useMemo(
     () => debounce((value) => setSearch(value), 300),
@@ -88,114 +79,155 @@ function Home() {
 
   return (
     <PageWrapper>
-  <div style={styles.container}>
-    
-    {/* HEADER */}
-    <div style={styles.header}>
-      <h1>🌾 Agro Market</h1>
-      <p style={styles.subtitle}>
-        Discover fresh farm products, livestock & equipment
-      </p>
-    </div>
+      <div style={styles.container}>
+        
+        {/* HEADER */}
+        <div style={styles.header}>
+          <h1>🌾 Agro Market</h1>
+          <p style={styles.subtitle}>
+            Discover fresh farm products, livestock & equipment
+          </p>
+        </div>
 
-    {/* FILTER SECTION */}
-    <div style={styles.filterBox}>
-      
-      {/* SEARCH */}
-      <input
-        type="text"
-        placeholder="Search products..."
-        onChange={(e) => handleSearch(e.target.value)}
-        style={styles.search}
-      />
+        {/* FILTER SECTION */}
+        <div style={styles.filterBox}>
+          
+          {/* SEARCH */}
+          <input
+            type="text"
+            placeholder="Search products..."
+            onChange={(e) => handleSearch(e.target.value)}
+            style={styles.search}
+          />
 
-      {/* CATEGORY */}
-      <div style={styles.row}>
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setSelectedCategory(cat)}
-            style={{
-              ...styles.chip,
-              background:
-                selectedCategory === cat ? "#2e7d32" : "#f1f5f9",
-              color:
-                selectedCategory === cat ? "#fff" : "#333",
-            }}
+          {/* CATEGORY */}
+          <div style={styles.row}>
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                style={{
+                  ...styles.chip,
+                  background:
+                    selectedCategory === cat ? "#2e7d32" : "#f1f5f9",
+                  color:
+                    selectedCategory === cat ? "#fff" : "#333",
+                }}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* PRICE */}
+          <p>
+            <strong>Price:</strong> ₦{priceRange[0].toLocaleString()} - ₦
+            {priceRange[1].toLocaleString()}
+          </p>
+
+          <input
+            type="range"
+            min="0"
+            max="200000"
+            step="1000"
+            value={priceRange[1]}
+            onChange={(e) =>
+              setPriceRange([priceRange[0], Number(e.target.value)])
+            }
+            style={{ width: "100%" }}
+          />
+
+          {/* LOCATION */}
+          <select
+            value={selectedLocation}
+            onChange={(e) => setSelectedLocation(e.target.value)}
+            style={styles.select}
           >
-            {cat}
-          </button>
-        ))}
+            <option value="All">All Locations</option>
+            {allLocations.map((loc) => (
+              <option key={loc}>{loc}</option>
+            ))}
+          </select>
+
+          {/* TAGS */}
+          <div style={styles.row}>
+            {allTags.map((tag) => (
+              <button
+                key={tag}
+                onClick={() => toggleTag(tag)}
+                style={{
+                  ...styles.tag,
+                  background: selectedTags.includes(tag)
+                    ? "#2e7d32"
+                    : "#eef2f7",
+                  color: selectedTags.includes(tag)
+                    ? "#fff"
+                    : "#333",
+                }}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* PRODUCTS */}
+        <div style={styles.grid}>
+          {filteredProducts.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onAdd={(item) => {
+                dispatch(addToCart(item));
+                toast(`Added ${item.title}`, { type: "success" });
+              }}
+            />
+          ))}
+        </div>
+
+        {/* FOOTER */}
+        <div style={styles.footer}>
+          <div style={styles.footerGrid}>
+            
+            <div>
+              <h3>🌾 AgroMarket</h3>
+              <p>
+                Connecting farmers and buyers across Nigeria.
+                Buy quality farm products with ease.
+              </p>
+            </div>
+
+            <div>
+              <h4>Quick Links</h4>
+              <p>Home</p>
+              <p>Wishlist</p>
+              <p>Cart</p>
+              <p>Orders</p>
+            </div>
+
+            <div>
+              <h4>Support</h4>
+              <p>📞 +234 800 000 0000</p>
+              <p>📧 support@agromarket.com</p>
+              <p>📍 Ibadan, Nigeria</p>
+            </div>
+
+            <div>
+              <h4>Tips</h4>
+              <p>✔ Use quality seeds</p>
+              <p>✔ Maintain irrigation</p>
+              <p>✔ Use good fertilizers</p>
+            </div>
+
+          </div>
+
+          <p style={styles.footerBottom}>
+            © 2026 AgroMarket • Built for smart farming 🚜
+          </p>
+        </div>
+
       </div>
-
-      {/* PRICE */}
-      <p style={{ marginTop: 10 }}>
-        <strong>Price:</strong> ₦{priceRange[0].toLocaleString()} - ₦
-        {priceRange[1].toLocaleString()}
-      </p>
-
-      <input
-        type="range"
-        min="0"
-        max="200000"
-        step="1000"
-        value={priceRange[1]}
-        onChange={(e) =>
-          setPriceRange([priceRange[0], Number(e.target.value)])
-        }
-        style={{ width: "100%" }}
-      />
-
-      {/* LOCATION */}
-      <select
-        value={selectedLocation}
-        onChange={(e) => setSelectedLocation(e.target.value)}
-        style={styles.select}
-      >
-        <option value="All">All Locations</option>
-        {allLocations.map((loc) => (
-          <option key={loc}>{loc}</option>
-        ))}
-      </select>
-
-      {/* TAGS */}
-      <div style={styles.row}>
-        {allTags.map((tag) => (
-          <button
-            key={tag}
-            onClick={() => toggleTag(tag)}
-            style={{
-              ...styles.tag,
-              background: selectedTags.includes(tag)
-                ? "#2e7d32"
-                : "#eef2f7",
-              color: selectedTags.includes(tag)
-                ? "#fff"
-                : "#333",
-            }}
-          >
-            {tag}
-          </button>
-        ))}
-      </div>
-    </div>
-
-    {/* PRODUCTS */}
-    <div style={styles.grid}>
-      {filteredProducts.map((product) => (
-        <ProductCard
-          key={product.id}
-          product={product}
-          onAdd={(item) => {
-            dispatch(addToCart(item));
-            toast(`Added ${item.title}`, { type: "success" });
-          }}
-        />
-      ))}
-    </div>
-
-  </div>
-</PageWrapper>
+    </PageWrapper>
   );
 }
 
@@ -212,7 +244,6 @@ const styles = {
 
   subtitle: {
     color: "#666",
-    marginTop: 5,
   },
 
   filterBox: {
@@ -263,8 +294,29 @@ const styles = {
 
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gridTemplateColumns: "repeat(4, 1fr)", 
     gap: 16,
+  },
+
+  footer: {
+    marginTop: 50,
+    padding: 30,
+    background: "#1b5e20",
+    color: "white",
+    borderRadius: 12,
+  },
+
+  footerGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+    gap: 20,
+  },
+
+  footerBottom: {
+    textAlign: "center",
+    marginTop: 20,
+    fontSize: 12,
+    opacity: 0.7,
   },
 };
 

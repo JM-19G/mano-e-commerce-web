@@ -6,8 +6,10 @@ function PageWrapper({ children }) {
         position: "relative",
 
         /* 🌄 BACKGROUND IMAGE */
-        backgroundImage:
-          "url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1600&auto=format&fit=crop')",
+        backgroundImage: `
+linear-gradient(rgba(29, 26, 26, 0.4), rgba(0, 0, 0, 0.4)),
+url("https://images.unsplash.com/photo-1500382017468-9049fed747ef")
+`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundAttachment: "fixed",
