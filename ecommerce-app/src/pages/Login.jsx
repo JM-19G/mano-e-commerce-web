@@ -88,7 +88,7 @@ const styles = {
   },
 
   input: {
-    width: "100%",
+    width: "93%",
     padding: 12,
     marginBottom: 15,
     borderRadius: 8,

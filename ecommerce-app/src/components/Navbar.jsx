@@ -40,6 +40,7 @@ function Navbar() {
     localStorage.removeItem("currentUser");
     navigate("/");
   };
+  
 
   return (
     <div style={styles.navbar}>

@@ -88,211 +88,184 @@ function Home() {
 
   return (
     <PageWrapper>
-      {/* 🔥 MAIN GLASS CONTAINER */}
-      <div
-        style={{
-          maxWidth: 1200,
-          margin: "0 auto",
-          background: "rgba(255,255,255,0.92)",
-          borderRadius: 18,
-          padding: 24,
-          boxShadow: "0 20px 60px rgba(0,0,0,0.25)",
-          backdropFilter: "blur(6px)",
-        }}
-      >
-        {/* HEADER */}
-        <h1 style={{ marginBottom: 5 }}>
-          {leafIcon} Agro Market
-        </h1>
-        <p style={{ marginBottom: 20, color: "#555" }}>
-          Cart Items: {cartItems.length}
-        </p>
+  <div style={styles.container}>
+    
+    {/* HEADER */}
+    <div style={styles.header}>
+      <h1>🌾 Agro Market</h1>
+      <p style={styles.subtitle}>
+        Discover fresh farm products, livestock & equipment
+      </p>
+    </div>
 
-        {/* SEARCH */}
-        <input
-          type="text"
-          placeholder="Search products..."
-          onChange={(e) => handleSearch(e.target.value)}
-          style={{
-            width: "100%",
-            padding: 14,
-            marginBottom: 20,
-            borderRadius: 10,
-            border: "1px solid #ddd",
-            fontSize: 15,
+    {/* FILTER SECTION */}
+    <div style={styles.filterBox}>
+      
+      {/* SEARCH */}
+      <input
+        type="text"
+        placeholder="Search products..."
+        onChange={(e) => handleSearch(e.target.value)}
+        style={styles.search}
+      />
+
+      {/* CATEGORY */}
+      <div style={styles.row}>
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setSelectedCategory(cat)}
+            style={{
+              ...styles.chip,
+              background:
+                selectedCategory === cat ? "#2e7d32" : "#f1f5f9",
+              color:
+                selectedCategory === cat ? "#fff" : "#333",
+            }}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {/* PRICE */}
+      <p style={{ marginTop: 10 }}>
+        <strong>Price:</strong> ₦{priceRange[0].toLocaleString()} - ₦
+        {priceRange[1].toLocaleString()}
+      </p>
+
+      <input
+        type="range"
+        min="0"
+        max="200000"
+        step="1000"
+        value={priceRange[1]}
+        onChange={(e) =>
+          setPriceRange([priceRange[0], Number(e.target.value)])
+        }
+        style={{ width: "100%" }}
+      />
+
+      {/* LOCATION */}
+      <select
+        value={selectedLocation}
+        onChange={(e) => setSelectedLocation(e.target.value)}
+        style={styles.select}
+      >
+        <option value="All">All Locations</option>
+        {allLocations.map((loc) => (
+          <option key={loc}>{loc}</option>
+        ))}
+      </select>
+
+      {/* TAGS */}
+      <div style={styles.row}>
+        {allTags.map((tag) => (
+          <button
+            key={tag}
+            onClick={() => toggleTag(tag)}
+            style={{
+              ...styles.tag,
+              background: selectedTags.includes(tag)
+                ? "#2e7d32"
+                : "#eef2f7",
+              color: selectedTags.includes(tag)
+                ? "#fff"
+                : "#333",
+            }}
+          >
+            {tag}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    {/* PRODUCTS */}
+    <div style={styles.grid}>
+      {filteredProducts.map((product) => (
+        <ProductCard
+          key={product.id}
+          product={product}
+          onAdd={(item) => {
+            dispatch(addToCart(item));
+            toast(`Added ${item.title}`, { type: "success" });
           }}
         />
+      ))}
+    </div>
 
-        {/* CATEGORY */}
-        <div style={{ marginBottom: 20 }}>
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              style={{
-                marginRight: 8,
-                marginBottom: 8,
-                padding: "8px 16px",
-                background:
-                  selectedCategory === cat
-                    ? "#2e7d32"
-                    : "#f3f4f6",
-                color:
-                  selectedCategory === cat
-                    ? "white"
-                    : "#333",
-                border: "none",
-                borderRadius: 20,
-                cursor: "pointer",
-                fontSize: 13,
-              }}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        {/* FILTER BAR */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 15,
-            marginBottom: 20,
-          }}
-        >
-          {/* PRICE */}
-          <div>
-            <p style={{ fontSize: 13, marginBottom: 5 }}>
-              Price: {naira}
-              {priceRange[0].toLocaleString()} - {naira}
-              {priceRange[1].toLocaleString()}
-            </p>
-
-            <input
-              type="range"
-              min="0"
-              max="200000"
-              step="1000"
-              value={priceRange[1]}
-              onChange={(e) =>
-                setPriceRange([
-                  priceRange[0],
-                  Number(e.target.value),
-                ])
-              }
-              style={{ width: "100%" }}
-            />
-          </div>
-
-          {/* LOCATION */}
-          <select
-            value={selectedLocation}
-            onChange={(e) =>
-              setSelectedLocation(e.target.value)
-            }
-            style={{
-              padding: 12,
-              borderRadius: 10,
-              border: "1px solid #ddd",
-            }}
-          >
-            <option value="All">All Locations</option>
-            {allLocations.map((loc) => (
-              <option key={loc} value={loc}>
-                {loc}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* TAGS */}
-        <div style={{ marginBottom: 25 }}>
-          {allTags.map((tag) => (
-            <button
-              key={tag}
-              onClick={() => toggleTag(tag)}
-              style={{
-                margin: 4,
-                padding: "6px 12px",
-                background: selectedTags.includes(tag)
-                  ? "#2e7d32"
-                  : "#eee",
-                color: selectedTags.includes(tag)
-                  ? "white"
-                  : "#333",
-                border: "none",
-                borderRadius: 20,
-                cursor: "pointer",
-                fontSize: 12,
-              }}
-            >
-              {tag}
-            </button>
-          ))}
-        </div>
-
-        {/* PRODUCTS */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns:
-              "repeat(auto-fit, minmax(250px, 1fr))",
-            gap: 20,
-          }}
-        >
-          {filteredProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onAdd={(item) => {
-                dispatch(addToCart(item));
-                toast(`Added ${item.title}`, {
-                  type: "success",
-                });
-              }}
-            />
-          ))}
-        </div>
-
-        {filteredProducts.length === 0 && (
-          <p style={{ marginTop: 20 }}>
-            No products found.
-          </p>
-        )}
-
-        {/* FOOTER */}
-        <div
-          style={{
-            marginTop: 40,
-            textAlign: "center",
-            color: "#666",
-          }}
-        >
-          <p>🌾 Connecting farmers & buyers easily</p>
-
-          <button
-            onClick={handleLogout}
-            style={{
-              marginTop: 15,
-              padding: "10px 20px",
-              background: "#c62828",
-              color: "white",
-              border: "none",
-              borderRadius: 8,
-              cursor: "pointer",
-            }}
-          >
-            Logout
-          </button>
-
-          <p style={{ marginTop: 10, fontSize: 12 }}>
-            © 2026 Agro Market
-          </p>
-        </div>
-      </div>
-    </PageWrapper>
+  </div>
+</PageWrapper>
   );
 }
+
+const styles = {
+  container: {
+    maxWidth: 1200,
+    margin: "0 auto",
+    padding: 20,
+  },
+
+  header: {
+    marginBottom: 20,
+  },
+
+  subtitle: {
+    color: "#666",
+    marginTop: 5,
+  },
+
+  filterBox: {
+    background: "#fff",
+    padding: 20,
+    borderRadius: 12,
+    boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+    marginBottom: 25,
+  },
+
+  search: {
+    width: "97%",
+    padding: 12,
+    borderRadius: 8,
+    border: "1px solid #ddd",
+    marginBottom: 15,
+  },
+
+  row: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: 8,
+    marginBottom: 10,
+  },
+
+  chip: {
+    padding: "6px 12px",
+    borderRadius: 20,
+    border: "none",
+    cursor: "pointer",
+  },
+
+  tag: {
+    padding: "5px 10px",
+    borderRadius: 20,
+    border: "none",
+    fontSize: 12,
+    cursor: "pointer",
+  },
+
+  select: {
+    width: "100%",
+    padding: 10,
+    borderRadius: 8,
+    border: "1px solid #ddd",
+    marginTop: 10,
+  },
+
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+    gap: 20,
+  },
+};
 
 export default Home;
