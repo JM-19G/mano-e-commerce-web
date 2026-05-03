@@ -12,7 +12,6 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import ProductDetails from "./pages/ProductDetails";
 
-<Route path="/product/:id" element={<ProductDetails />} />
 function App() {
   return (
     <BrowserRouter>
@@ -81,7 +80,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+        <Route path="/product/:id" element={<ProductDetails />} />
       </Routes>
     </BrowserRouter>
   );
