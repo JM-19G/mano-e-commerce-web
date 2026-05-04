@@ -48,15 +48,22 @@ const styles = {
   container: {
     maxWidth: 1200,
     margin: "0 auto",
-    background: "rgba(255,255,255,0.9)",
+
+    // 🔥 THIS IS THE FIX
+    background: "rgba(255,255,255,0.15)",
+    background: "rgba(255,255,255,0.75)",
+
     padding: 20,
     borderRadius: 12,
+    border: "1px solid rgba(255,255,255,0.2)",
   },
+
   grid: {
     display: "grid",
     gridTemplateColumns: "repeat(4, 1fr)",
     gap: 20,
   },
+
   remove: {
     marginTop: 5,
     background: "red",

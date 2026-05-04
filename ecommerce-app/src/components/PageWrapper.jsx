@@ -6,7 +6,7 @@ function PageWrapper({ children }) {
         position: "relative",
 
         backgroundImage: `
-linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),
 url("https://images.unsplash.com/photo-1500382017468-9049fed747ef")
 `,
         backgroundSize: "cover",
@@ -14,17 +14,15 @@ url("https://images.unsplash.com/photo-1500382017468-9049fed747ef")
         backgroundAttachment: "fixed",
       }}
     >
-      {/* BLUR OVERLAY */}
+      {/* ❌ REMOVE BLUR — KEEP ONLY DARK OVERLAY */}
       <div
         style={{
           position: "absolute",
           inset: 0,
-          backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
+          background: "rgba(0,0,0,0.25)", // just dim, no blur
         }}
       />
 
-      {/* CONTENT */}
       <div
         style={{
           position: "relative",

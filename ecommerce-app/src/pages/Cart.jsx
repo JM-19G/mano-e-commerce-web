@@ -15,7 +15,6 @@ function Cart() {
   const items = useSelector((state) => state.cart.items);
   const orders = useSelector((state) => state.cart.orders);
   const coupon = useSelector((state) => state.cart.coupon);
-  const couponError = useSelector((state) => state.cart.couponError);
   const { toast } = useToast();
 
   const naira = "\u20A6";
@@ -132,28 +131,45 @@ const styles = {
   container: {
     maxWidth: 1200,
     margin: "0 auto",
-    background: "rgba(255,255,255,0.9)",
+
+    // ✅ GLASS EFFECT (instead of solid white)
+    background: "rgba(255,255,255,0.15)",
+    background: "rgba(255,255,255,0.75)",
+
     padding: 20,
     borderRadius: 12,
+    border: "1px solid rgba(255,255,255,0.2)",
   },
+
   grid: {
     display: "grid",
     gridTemplateColumns: "2fr 1fr",
     gap: 20,
   },
+
   card: {
-    background: "#fff",
+    // ✅ ITEM CARD GLASS
+    background: "rgba(255,255,255,0.15)",
+    background: "rgba(255,255,255,0.75)",
+
     padding: 12,
     borderRadius: 8,
     marginBottom: 10,
+    border: "1px solid rgba(255,255,255,0.2)",
   },
+
   summary: {
-    background: "#fff",
+    // ✅ SUMMARY GLASS
+    background: "rgba(255,255,255,0.15)",
+    background: "rgba(255,255,255,0.75)",
+
     padding: 15,
     borderRadius: 8,
+    border: "1px solid rgba(255,255,255,0.2)",
   },
+
   input: {
-    width: "100%",
+    width: "93%",
     padding: 10,
     marginBottom: 10,
   },

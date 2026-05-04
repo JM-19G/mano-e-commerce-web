@@ -77,7 +77,9 @@ const styles = {
     width: 350,
     padding: 25,
     borderRadius: 12,
-    background: "var(--surface)",
+    background: "rgba(255,255,255,0.15)",
+    background: "rgba(255,255,255,0.75)",
+    border: "1px solid rgba(255,255,255,0.2)",
     boxShadow: "var(--shadow)",
   },
 

@@ -32,15 +32,25 @@ const styles = {
   container: {
     maxWidth: 1000,
     margin: "0 auto",
-    background: "rgba(255,255,255,0.9)",
+
+    // ✅ GLASS CONTAINER
+    background: "rgba(255,255,255,0.15)",
+    background: "rgba(255,255,255,0.75)",
+
     padding: 20,
     borderRadius: 12,
+    border: "1px solid rgba(255,255,255,0.2)",
   },
+
   card: {
-    background: "#fff",
+    // ✅ GLASS CARD
+    background: "rgba(255,255,255,0.15)",
+    background: "rgba(255,255,255,0.75)",
+
     padding: 12,
     borderRadius: 8,
     marginBottom: 10,
+    border: "1px solid rgba(255,255,255,0.2)",
   },
 };
 
