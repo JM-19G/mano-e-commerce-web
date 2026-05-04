@@ -1,3 +1,4 @@
+import PageWrapper from "../components/PageWrapper";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -18,35 +19,16 @@ function Cart() {
   const { toast } = useToast();
 
   const naira = "\u20A6";
-  const cartIcon = "\uD83D\uDED2";
-  const ordersIcon = "\uD83D\uDCE6";
-
   const [couponInput, setCouponInput] = useState("");
 
-  const lastCouponCodeRef = useRef(null);
-  const lastCouponErrorRef = useRef(null);
   const lastOrdersLenRef = useRef(orders.length);
-
-  useEffect(() => {
-    if (coupon?.code && coupon.code !== lastCouponCodeRef.current) {
-      toast(`Coupon ${coupon.code} applied`, { type: "success" });
-      lastCouponCodeRef.current = coupon.code;
-    }
-  }, [coupon, toast]);
-
-  useEffect(() => {
-    if (couponError && couponError !== lastCouponErrorRef.current) {
-      toast(couponError, { type: "error" });
-      lastCouponErrorRef.current = couponError;
-    }
-  }, [couponError, toast]);
 
   useEffect(() => {
     if (orders.length > lastOrdersLenRef.current) {
       toast("Order placed successfully", { type: "success" });
     }
     lastOrdersLenRef.current = orders.length;
-  }, [orders.length, toast]);
+  }, [orders.length]);
 
   const { subtotal, discount, total } = useMemo(() => {
     const subtotalValue = items.reduce(
@@ -57,15 +39,11 @@ function Cart() {
     let discountValue = 0;
     if (coupon) {
       if (coupon.type === "percent") {
-        discountValue = Math.round(
-          (subtotalValue * (Number(coupon.value) || 0)) / 100
-        );
-      } else if (coupon.type === "amount") {
-        discountValue = Number(coupon.value) || 0;
+        discountValue = (subtotalValue * coupon.value) / 100;
+      } else {
+        discountValue = coupon.value;
       }
     }
-
-    discountValue = Math.min(discountValue, subtotalValue);
 
     return {
       subtotal: subtotalValue,
@@ -74,186 +52,111 @@ function Cart() {
     };
   }, [items, coupon]);
 
-  const handleApplyCoupon = () => {
-    if (!couponInput.trim()) {
-      toast("Enter a coupon code", { type: "error" });
-      return;
-    }
-    dispatch(applyCoupon(couponInput));
-  };
-
-  const handleClearCoupon = () => {
-    dispatch(clearCoupon());
-    setCouponInput("");
-    toast("Coupon cleared", { type: "info" });
-  };
-
-  const handleCheckout = () => {
-    if (items.length === 0) {
-      toast("Your cart is empty", { type: "error" });
-      return;
-    }
-    dispatch(checkout());
-  };
-
   return (
-    <div style={{ padding: 20 }}>
-      <h1>
-        {cartIcon} Cart
-      </h1>
+    <PageWrapper>
+      <div style={styles.container}>
+        <h1>🛒 Cart</h1>
 
-      <div className="cart-grid">
-        <div>
-          {items.length === 0 && <p>Cart is empty</p>}
+        <div style={styles.grid}>
+          {/* ITEMS */}
+          <div>
+            {items.length === 0 && <p>Cart is empty</p>}
 
-          {items.map((item) => (
-            <div
-              key={item.id}
-              style={{
-                border: "1px solid #eee",
-                borderRadius: 8,
-                padding: 12,
-                marginBottom: 12,
-                textAlign: "left",
-                background: "var(--surface)",
-              }}
-            >
-              <h3 style={{ margin: "0 0 6px" }}>{item.title}</h3>
-              <p style={{ margin: "0 0 10px" }}>
-                {naira}
-                {Number(item.price).toLocaleString()}
-              </p>
+            {items.map((item) => (
+              <div key={item.id} style={styles.card}>
+                <h3>{item.title}</h3>
+                <p>
+                  {naira}
+                  {item.price}
+                </p>
 
-              <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                <input
-                  type="number"
-                  value={item.quantity}
-                  min="1"
-                  onChange={(e) =>
-                    dispatch(
-                      updateQuantity({
-                        id: item.id,
-                        quantity: Number(e.target.value),
-                      })
-                    )
-                  }
-                  style={{ width: 90, padding: 8 }}
-                />
+                <div style={{ display: "flex", gap: 10 }}>
+                  <input
+                    type="number"
+                    value={item.quantity}
+                    min="1"
+                    onChange={(e) =>
+                      dispatch(
+                        updateQuantity({
+                          id: item.id,
+                          quantity: Number(e.target.value),
+                        })
+                      )
+                    }
+                  />
 
-                <button
-                  onClick={() => {
-                    dispatch(removeFromCart(item.id));
-                    toast("Removed from cart", { type: "info" });
-                  }}
-                >
-                  Remove
-                </button>
+                  <button
+                    onClick={() => dispatch(removeFromCart(item.id))}
+                  >
+                    Remove
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-
-        <div
-          className="cart-summary"
-          style={{
-            padding: 15,
-            border: "1px solid #ddd",
-            borderRadius: 8,
-            textAlign: "left",
-            background: "var(--surface)",
-          }}
-        >
-          <h2 style={{ marginTop: 0 }}>Summary</h2>
-          <p style={{ margin: "6px 0" }}>
-            Subtotal: {naira}
-            {subtotal.toLocaleString()}
-          </p>
-          <p style={{ margin: "6px 0" }}>
-            Discount: -{naira}
-            {discount.toLocaleString()}
-          </p>
-          <h2 style={{ margin: "10px 0 0" }}>
-            Total: {naira}
-            {total.toLocaleString()}
-          </h2>
-
-          <div style={{ marginTop: 15 }}>
-            <label style={{ display: "block", marginBottom: 6 }}>
-              Coupon code (try <strong>MANO10</strong> or{" "}
-              <strong>WELCOME5</strong>)
-            </label>
-
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-              <input
-                value={couponInput}
-                onChange={(e) => setCouponInput(e.target.value)}
-                placeholder="Enter coupon"
-                style={{
-                  padding: 10,
-                  borderRadius: 6,
-                  border: "1px solid #ccc",
-                  flex: "1",
-                  minWidth: 220,
-                }}
-              />
-              <button onClick={handleApplyCoupon}>Apply</button>
-              <button onClick={handleClearCoupon}>Clear</button>
-            </div>
-
-            {coupon && (
-              <p style={{ marginTop: 10, color: "#2e7d32" }}>
-                Applied: <strong>{coupon.code}</strong> ({coupon.label})
-              </p>
-            )}
-
-            {couponError && (
-              <p style={{ marginTop: 10, color: "crimson" }}>{couponError}</p>
-            )}
+            ))}
           </div>
 
-          <button
-            onClick={handleCheckout}
-            disabled={items.length === 0}
-            style={{
-              marginTop: 15,
-              padding: "10px 14px",
-              width: "100%",
-              borderRadius: 8,
-              border: "none",
-              cursor: items.length === 0 ? "not-allowed" : "pointer",
-              background: items.length === 0 ? "#d1d5db" : "#2e7d32",
-              color: items.length === 0 ? "#374151" : "white",
-              fontWeight: 700,
-            }}
-          >
-            Checkout
-          </button>
+          {/* SUMMARY */}
+          <div style={styles.summary}>
+            <h2>Summary</h2>
+
+            <p>Subtotal: ₦{subtotal}</p>
+            <p>Discount: ₦{discount}</p>
+            <h3>Total: ₦{total}</h3>
+
+            <input
+              placeholder="Coupon"
+              value={couponInput}
+              onChange={(e) => setCouponInput(e.target.value)}
+              style={styles.input}
+            />
+
+            <button onClick={() => dispatch(applyCoupon(couponInput))}>
+              Apply
+            </button>
+
+            <button onClick={() => dispatch(clearCoupon())}>
+              Clear
+            </button>
+
+            <button onClick={() => dispatch(checkout())}>
+              Checkout
+            </button>
+          </div>
         </div>
       </div>
-
-      <hr />
-
-      <h2>
-        {ordersIcon} Orders (Preview)
-      </h2>
-
-      {orders.map((order) => (
-        <div
-          key={order.id}
-          style={{ padding: 10, borderBottom: "1px solid #eee" }}
-        >
-          <p style={{ margin: "4px 0" }}>Order ID: {order.id}</p>
-          <p style={{ margin: "4px 0" }}>
-            Total: {naira}
-            {Number(order.total).toLocaleString()}
-          </p>
-          {order.coupon && (
-            <p style={{ margin: "4px 0" }}>Coupon: {order.coupon}</p>
-          )}
-        </div>
-      ))}
-    </div>
+    </PageWrapper>
   );
 }
+
+const styles = {
+  container: {
+    maxWidth: 1200,
+    margin: "0 auto",
+    background: "rgba(255,255,255,0.9)",
+    padding: 20,
+    borderRadius: 12,
+  },
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "2fr 1fr",
+    gap: 20,
+  },
+  card: {
+    background: "#fff",
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+  summary: {
+    background: "#fff",
+    padding: 15,
+    borderRadius: 8,
+  },
+  input: {
+    width: "100%",
+    padding: 10,
+    marginBottom: 10,
+  },
+};
 
 export default Cart;

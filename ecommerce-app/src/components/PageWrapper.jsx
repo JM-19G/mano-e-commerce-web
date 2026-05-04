@@ -5,9 +5,8 @@ function PageWrapper({ children }) {
         minHeight: "100vh",
         position: "relative",
 
-        /* 🌄 BACKGROUND IMAGE */
         backgroundImage: `
-linear-gradient(rgba(29, 26, 26, 0.4), rgba(0, 0, 0, 0.4)),
+linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
 url("https://images.unsplash.com/photo-1500382017468-9049fed747ef")
 `,
         backgroundSize: "cover",
@@ -15,14 +14,13 @@ url("https://images.unsplash.com/photo-1500382017468-9049fed747ef")
         backgroundAttachment: "fixed",
       }}
     >
-      {/* ✅ DARK GLASS OVERLAY (THIS IS THE MAGIC) */}
+      {/* BLUR OVERLAY */}
       <div
         style={{
           position: "absolute",
           inset: 0,
-          backdropFilter: "blur(10px)",
-          WebkitBackdropFilter: "blur(10px)",
-          background: "rgba(0, 0, 0, 0.35)", // 👈 darker, not white
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
         }}
       />
 
@@ -31,7 +29,7 @@ url("https://images.unsplash.com/photo-1500382017468-9049fed747ef")
         style={{
           position: "relative",
           zIndex: 1,
-          padding: "30px 20px",
+          padding: "20px",
         }}
       >
         {children}
