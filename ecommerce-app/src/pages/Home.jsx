@@ -243,7 +243,7 @@ const styles = {
   },
 
   subtitle: {
-    color: "#666",
+    color: "#07b218",
   },
 
   filterBox: {
@@ -301,9 +301,11 @@ const styles = {
   footer: {
     marginTop: 50,
     padding: 30,
-    background: "#1b5e20",
-    color: "white",
+    background: "#bfc6c0",
+    color: "black",
     borderRadius: 12,
+    // backdropFilter: "blur(50px)",
+    WebkitBackdropFilter: "blur(50px)",
   },
 
   footerGrid: {

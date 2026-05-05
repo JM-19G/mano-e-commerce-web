@@ -134,7 +134,8 @@ const styles = {
 
     // ✅ GLASS EFFECT (instead of solid white)
     background: "rgba(255,255,255,0.15)",
-    background: "rgba(255,255,255,0.75)",
+    backdropFilter: "blur(10px)",
+    WebkitBackdropFilter: "blur(10px)",
 
     padding: 20,
     borderRadius: 12,
@@ -150,7 +151,8 @@ const styles = {
   card: {
     // ✅ ITEM CARD GLASS
     background: "rgba(255,255,255,0.15)",
-    background: "rgba(255,255,255,0.75)",
+    backdropFilter: "blur(10px)",
+    WebkitBackdropFilter: "blur(10px)",
 
     padding: 12,
     borderRadius: 8,
@@ -161,7 +163,8 @@ const styles = {
   summary: {
     // ✅ SUMMARY GLASS
     background: "rgba(255,255,255,0.15)",
-    background: "rgba(255,255,255,0.75)",
+    backdropFilter: "blur(10px)",
+    WebkitBackdropFilter: "blur(10px)",
 
     padding: 15,
     borderRadius: 8,

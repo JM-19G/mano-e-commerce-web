@@ -51,11 +51,13 @@ const styles = {
 
     // 🔥 THIS IS THE FIX
     background: "rgba(255,255,255,0.15)",
-    background: "rgba(255,255,255,0.75)",
+    backdropFilter: "blur(10px)",
+    WebkitBackdropFilter: "blur(10px)",
 
     padding: 20,
     borderRadius: 12,
     border: "1px solid rgba(255,255,255,0.2)",
+    
   },
 
   grid: {

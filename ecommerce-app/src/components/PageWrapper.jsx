@@ -6,9 +6,9 @@ function PageWrapper({ children }) {
         position: "relative",
 
         backgroundImage: `
-linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),
-url("https://images.unsplash.com/photo-1500382017468-9049fed747ef")
-`,
+         
+         url("https://static.vecteezy.com/system/resources/previews/031/696/054/non_2x/sprawling-agricultural-farm-featuring-fields-of-crops-ai-generated-photo.jpg")
+        `,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundAttachment: "fixed",
