@@ -17,7 +17,7 @@ function App() {
     <BrowserRouter>
       <Routes>
 
-        {/* ✅ PUBLIC */}
+        {/* PUBLIC */}
         <Route
           path="/"
           element={
