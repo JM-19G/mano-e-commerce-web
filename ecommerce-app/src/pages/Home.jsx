@@ -207,9 +207,9 @@ function Home() {
 
             <div>
               <h4>Support</h4>
-              <p>📞 +234 800 000 0000</p>
-              <p>📧 support@agromarket.com</p>
-              <p>📍 Ibadan, Nigeria</p>
+              <p>📞 +234 703 430 0490</p>
+              <p>📧 manoahgoodnews@gmail.com</p>
+              <p>📍 Ogbomoso, Oyo state, Nigeria.</p>
             </div>
 
             <div>
@@ -243,7 +243,9 @@ const styles = {
   },
 
   subtitle: {
-    color: "#07b218",
+    color: "#0fd123",
+    fontSize: 20,
+    
   },
 
   filterBox: {
@@ -304,8 +306,8 @@ const styles = {
     background: "#bfc6c0",
     color: "black",
     borderRadius: 12,
-    // backdropFilter: "blur(50px)",
-    WebkitBackdropFilter: "blur(50px)",
+    background: "rgba(255, 255, 255, 0.15)", 
+    backdropFilter: "blur(6px)",
   },
 
   footerGrid: {
