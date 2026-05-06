@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -14,75 +14,82 @@ import ProductDetails from "./pages/ProductDetails";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
+    <Routes>
+      {/* PUBLIC */}
+      <Route
+        path="/"
+        element={
+          <PublicRoute>
+            <Login />
+          </PublicRoute>
+        }
+      />
 
-        {/* PUBLIC */}
-        <Route
-          path="/"
-          element={
-            <PublicRoute>
-              <Login />
-            </PublicRoute>
-          }
-        />
+      <Route
+        path="/register"
+        element={
+          <PublicRoute>
+            <Register />
+          </PublicRoute>
+        }
+      />
 
-        <Route
-          path="/register"
-          element={
-            <PublicRoute>
-              <Register />
-            </PublicRoute>
-          }
-        />
+      {/* PROTECTED */}
+      <Route
+        path="/home"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Home />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
 
-        {/* ✅ PROTECTED */}
-        <Route
-          path="/home"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Home />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+      <Route
+        path="/wishlist"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Wishlist />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
 
-        <Route
-          path="/wishlist"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Wishlist />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+      <Route
+        path="/cart"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Cart />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
 
-        <Route
-          path="/cart"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Cart />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+      <Route
+        path="/orders"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Orders />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
 
-        <Route
-          path="/orders"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Orders />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/product/:id" element={<ProductDetails />} />
-      </Routes>
-    </BrowserRouter>
+      <Route
+        path="/product/:id"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <ProductDetails />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
   );
 }
 
